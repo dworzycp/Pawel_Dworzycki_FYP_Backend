@@ -1,0 +1,10 @@
+E:\FYP\Backend\obj\Debug\netcoreapp2.0\Backend.csproj.CoreCompileInputs.cache
+E:\FYP\Backend\obj\Debug\netcoreapp2.0\Backend.AssemblyInfoInputs.cache
+E:\FYP\Backend\obj\Debug\netcoreapp2.0\Backend.AssemblyInfo.cs
+E:\FYP\Backend\bin\Debug\netcoreapp2.0\Backend.deps.json
+E:\FYP\Backend\bin\Debug\netcoreapp2.0\Backend.runtimeconfig.json
+E:\FYP\Backend\bin\Debug\netcoreapp2.0\Backend.runtimeconfig.dev.json
+E:\FYP\Backend\bin\Debug\netcoreapp2.0\Backend.dll
+E:\FYP\Backend\bin\Debug\netcoreapp2.0\Backend.pdb
+E:\FYP\Backend\obj\Debug\netcoreapp2.0\Backend.dll
+E:\FYP\Backend\obj\Debug\netcoreapp2.0\Backend.pdb
