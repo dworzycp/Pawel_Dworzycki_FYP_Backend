@@ -98,7 +98,7 @@ class FakeDataGen
                 Random rng = new Random();
                 int radius;
 
-                // 00:30 - 12:30 (26 points)
+                // 00:00 - 12:30 (26 points)
                 for (int k = 0; k < 26; k++)
                 {
                     int r = rng.Next(100);
