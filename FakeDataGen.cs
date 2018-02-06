@@ -44,42 +44,39 @@ class FakeDataGen
                 // 17:00 - 19:00 - travelling / noise
                 // 19:30 - 23:30 - home
 
-                // Run once for midnight (1 point at home)
-                Point p = GenerateRandomPoint(homeLat, homeLng, radiusInMeters, time);
-                points.Add(p);
-                // Between 00:30 and 7:00 (14 points at home)
-                for (int k = 0; k < 14; k++)
+                // Between 00:00 and 7:00 (15 points at home)
+                for (int k = 0; k < 15; k++)
                 {
-                    time = time.AddMinutes(30);
-                    p = GenerateRandomPoint(homeLat, homeLng, radiusInMeters, time);
+                    Point p = GenerateRandomPoint(homeLat, homeLng, radiusInMeters, time);
                     points.Add(p);
+                    time = time.AddMinutes(30);
                 }
                 // Between 7:30 and 9:00 (4 points travelling/NOISE)
                 // For this the line between two points and get the co-ordinates on that line
                 foreach (Point pt in SplitLine(4))
                 {
-                    time = time.AddMinutes(30);
                     points.Add(pt);
+                    time = time.AddMinutes(30);
                 }
                 // Between 9:30 and 16:30 (15 points at work)
                 for (int k = 0; k < 15; k++)
                 {
-                    time = time.AddMinutes(30);
-                    p = GenerateRandomPoint(workLat, workLng, radiusInMeters, time);
+                    Point p = GenerateRandomPoint(workLat, workLng, radiusInMeters, time);
                     points.Add(p);
+                    time = time.AddMinutes(30);
                 }
                 // Between 17:00 and 19:00 (5 points travelling/NOISE)
                 foreach (Point pt in SplitLine(5))
                 {
-                    time = time.AddMinutes(30);
                     points.Add(pt);
+                    time = time.AddMinutes(30);
                 }
                 // Between 19:30 and 23:30 (9 points at home)
                 for (int k = 0; k < 9; k++)
                 {
-                    time = time.AddMinutes(30);
-                    p = GenerateRandomPoint(homeLat, homeLng, radiusInMeters, time);
+                    Point p = GenerateRandomPoint(homeLat, homeLng, radiusInMeters, time);
                     points.Add(p);
+                    time = time.AddMinutes(30);
                 }
             }
             else
@@ -101,22 +98,10 @@ class FakeDataGen
                 Random rng = new Random();
                 int radius;
 
-                // 00:00 (1 point)
-                int r = rng.Next(100);
-                if (r < 90)
+                // 00:30 - 12:30 (26 points)
+                for (int k = 0; k < 26; k++)
                 {
-                    radius = 50;
-                }
-                else
-                {
-                    radius = 250;
-                }
-
-                Point p = GenerateRandomPoint(homeLat, homeLng, radius, time);
-                // 00:30 - 12:30 (25 points)
-                for (int k = 0; k < 14; k++)
-                {
-                    r = rng.Next(100);
+                    int r = rng.Next(100);
                     if (r < 90)
                     {
                         radius = 50;
@@ -126,14 +111,14 @@ class FakeDataGen
                         radius = 250;
                     }
 
-                    time = time.AddMinutes(30);
-                    p = GenerateRandomPoint(homeLat, homeLng, radius, time);
+                    Point p = GenerateRandomPoint(homeLat, homeLng, radius, time);
                     points.Add(p);
+                    time = time.AddMinutes(30);
                 }
                 // 13:00 - 17:00 (9 points)
                 for (int k = 0; k < 9; k++)
                 {
-                    r = rng.Next(100);
+                    int r = rng.Next(100);
                     if (r < 40)
                     {
                         radius = 500;
@@ -147,14 +132,14 @@ class FakeDataGen
                         radius = 2500;
                     }
 
-                    time = time.AddMinutes(30);
-                    p = GenerateRandomPoint(homeLat, homeLng, radius, time);
+                    Point p = GenerateRandomPoint(homeLat, homeLng, radius, time);
                     points.Add(p);
+                    time = time.AddMinutes(30);
                 }
                 // 17:30 - 20:00 (6 points)
                 for (int k = 0; k < 6; k++)
                 {
-                    r = rng.Next(100);
+                    int r = rng.Next(100);
                     if (r < 80)
                     {
                         radius = 50;
@@ -164,14 +149,14 @@ class FakeDataGen
                         radius = 250;
                     }
 
-                    time = time.AddMinutes(30);
-                    p = GenerateRandomPoint(homeLat, homeLng, radius, time);
+                    Point p = GenerateRandomPoint(homeLat, homeLng, radius, time);
                     points.Add(p);
+                    time = time.AddMinutes(30);
                 }
                 // 20:30 - 23:30 (7 points)
                 for (int k = 0; k < 7; k++)
                 {
-                    r = rng.Next(100);
+                    int r = rng.Next(100);
                     if (r < 90)
                     {
                         radius = 50;
@@ -181,9 +166,9 @@ class FakeDataGen
                         radius = 250;
                     }
 
-                    time = time.AddMinutes(30);
-                    p = GenerateRandomPoint(homeLat, homeLng, radius, time);
+                    Point p = GenerateRandomPoint(homeLat, homeLng, radius, time);
                     points.Add(p);
+                    time = time.AddMinutes(30);
                 }
             }
             // Add 30 mins to go to midnight next day
