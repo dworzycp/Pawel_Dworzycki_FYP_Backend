@@ -6,47 +6,49 @@ using System.Linq;
 
 class DBSCAN
 {
+
+    public List<List<Point>> clusters { get; private set; }
+
     public DBSCAN(List<Point> points)
     {
         double eps = 0.0005;
-        int minPts = 3;
-        List<List<Point>> clusters = GetClusters(points, eps, minPts);
-        Console.Clear();
-        // print points to console
-        // Console.WriteLine("The {0} points are :\n", points.Count);
-        // foreach (Point p in points) Console.Write(" {0} ", p);
-        // Console.WriteLine();
+        int minPts = 20;
+        clusters = GetClusters(points, eps, minPts);
 
-        // print clusters to console
-        int total = 0;
-        for (int i = 0; i < clusters.Count; i++)
-        {
-            int count = clusters[i].Count;
-            total += count;
-            string plural = (count != 1) ? "s" : "";
-            Console.WriteLine("\nCluster {0} consists of the following {1} point{2} :\n", i + 1, count, plural);
-            foreach (Point p in clusters[i]) Console.WriteLine(" {0} ", p);
-            Console.WriteLine();
-        }
-        // print any points which are NOISE
-        total = points.Count - total;
-        if (total > 0)
-        {
-            string plural = (total != 1) ? "s" : "";
-            string verb = (total != 1) ? "are" : "is";
-            Console.WriteLine("\nThe following {0} point{1} {2} NOISE :\n", total, plural, verb);
-            foreach (Point p in points)
-            {
-                if (p.ClusterId == Point.NOISE) Console.WriteLine(" {0} ", p);
-            }
-            Console.WriteLine();
-        }
-        else
-        {
-            Console.WriteLine("\nNo points are NOISE");
-        }
-        Console.ReadKey();
+        #region Console Logging
+        // Console.Clear();
+        // // print clusters to console
+        // int total = 0;
+        // for (int i = 0; i < clusters.Count; i++)
+        // {
+        //     int count = clusters[i].Count;
+        //     total += count;
+        //     string plural = (count != 1) ? "s" : "";
+        //     Console.WriteLine("\nCluster {0} consists of the following {1} point{2} :\n", i + 1, count, plural);
+        //     foreach (Point p in clusters[i]) Console.WriteLine(" {0} ", p);
+        //     Console.WriteLine();
+        // }
+        // // print any points which are NOISE
+        // total = points.Count - total;
+        // if (total > 0)
+        // {
+        //     string plural = (total != 1) ? "s" : "";
+        //     string verb = (total != 1) ? "are" : "is";
+        //     Console.WriteLine("\nThe following {0} point{1} {2} NOISE :\n", total, plural, verb);
+        //     foreach (Point p in points)
+        //     {
+        //         if (p.ClusterId == Point.NOISE) Console.WriteLine(" {0} ", p);
+        //     }
+        //     Console.WriteLine();
+        // }
+        // else
+        // {
+        //     Console.WriteLine("\nNo points are NOISE");
+        // }
+        // Console.ReadKey();
+        #endregion
     }
+
     static List<List<Point>> GetClusters(List<Point> points, double eps, int minPts)
     {
         if (points == null) return null;
@@ -71,6 +73,7 @@ class DBSCAN
         }
         return clusters;
     }
+
     static List<Point> GetRegion(List<Point> points, Point p, double eps)
     {
         List<Point> region = new List<Point>();
@@ -81,6 +84,7 @@ class DBSCAN
         }
         return region;
     }
+
     static bool ExpandCluster(List<Point> points, Point p, int clusterId, double eps, int minPts)
     {
         List<Point> seeds = GetRegion(points, p, eps);

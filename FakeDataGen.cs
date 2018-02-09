@@ -3,7 +3,7 @@
  * Generates random points with a given radius to simulate real user
  *
  * @author Pawel Dworzycki
- * @version 06/02/2018
+ * @version 09/02/2018
  */
 using System;
 using System.Collections.Generic;
@@ -55,6 +55,7 @@ class FakeDataGen
                 // For this the line between two points and get the co-ordinates on that line
                 foreach (Point pt in SplitLine(4))
                 {
+                    pt.SetTime(time);
                     points.Add(pt);
                     time = time.AddMinutes(30);
                 }
@@ -68,6 +69,7 @@ class FakeDataGen
                 // Between 17:00 and 19:00 (5 points travelling/NOISE)
                 foreach (Point pt in SplitLine(5))
                 {
+                    pt.SetTime(time);
                     points.Add(pt);
                     time = time.AddMinutes(30);
                 }
