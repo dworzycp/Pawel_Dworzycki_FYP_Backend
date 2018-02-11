@@ -67,7 +67,7 @@ class TimeLeaveAndEnterClusterDays
                                 // Set leave time for the day to the point's creation date
                                 DateTime time = DateTime.ParseExact(p.createdAt.ToShortTimeString(), "HH:mm", CultureInfo.InvariantCulture);
                                 p.cluster.days[p.createdAt.ToShortDateString()].avgLeaveTime = time;
-                                Console.WriteLine("Left " + p.cluster.name + " on " + p.createdAt.ToShortDateString() + " at " + time);
+                                //Console.WriteLine("Left " + p.cluster.name + " on " + p.createdAt.ToShortDateString() + " at " + time);
                             }
                         }
                     }
@@ -80,7 +80,7 @@ class TimeLeaveAndEnterClusterDays
                             // Set enter time for the day to the point's creation date
                             DateTime time = DateTime.ParseExact(p.createdAt.ToShortTimeString(), "HH:mm", CultureInfo.InvariantCulture);
                             p.cluster.days[p.createdAt.ToShortDateString()].avgEnterTime = time;
-                            Console.WriteLine("Entered " + p.cluster.name + " on " + p.createdAt.ToShortDateString() + " at " + time);
+                            //Console.WriteLine("Entered " + p.cluster.name + " on " + p.createdAt.ToShortDateString() + " at " + time);
                         }
                     }
                 }

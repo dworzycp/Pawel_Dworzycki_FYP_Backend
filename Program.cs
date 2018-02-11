@@ -76,23 +76,23 @@ namespace Backend
             // TODO now need to average it out between past weeks
 
             // PRINT
-            // foreach (Cluster c in clusters)
-            // {
-            //     Console.WriteLine();
-            //     Console.WriteLine();
-            //     Console.WriteLine("#######################################");
-            //     Console.WriteLine("### " + " NEW CLUSTER " + " ###");
-            //     Console.WriteLine("#######################################");
-            //     foreach (KeyValuePair<String, ClusterDay> cd_pair in c.days)
-            //     {
-            //         Console.WriteLine();
-            //         Console.WriteLine("#######################################");
-            //         Console.WriteLine("### " + cd_pair.Key + " ###");
-            //         Console.WriteLine("#######################################");
-            //         Console.WriteLine("Enter time: " + cd_pair.Value.avgEnterTime);
-            //         Console.WriteLine("Leave time: " + cd_pair.Value.avgLeaveTime);
-            //     }
-            // }
+            foreach (Cluster c in clusters)
+            {
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("#######################################");
+                Console.WriteLine("### " + " NEW CLUSTER " + " ###");
+                Console.WriteLine("#######################################");
+                foreach (KeyValuePair<String, ClusterDay> cd_pair in c.days)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("#######################################");
+                    Console.WriteLine("### " + cd_pair.Key + " ###");
+                    Console.WriteLine("#######################################");
+                    Console.WriteLine("Enter time: " + cd_pair.Value.avgEnterTime);
+                    Console.WriteLine("Leave time: " + cd_pair.Value.avgLeaveTime);
+                }
+            }
 
             // foreach (List<Point> pts in pointsByDay.Values)
             // {
@@ -108,83 +108,6 @@ namespace Backend
             //     }
             // }
 
-        }
-
-        // TODO probably needs fixing after changes to TimeLeave... needing 2 clusters
-        private static List<Point> fakeDataForTimeTest()
-        {
-            List<Point> points = new List<Point>();
-
-            // Set up clusters
-            Cluster c_home = new Cluster();
-            c_home.days = new Dictionary<string, ClusterDay>();
-            Cluster c_work = new Cluster();
-            c_work.days = new Dictionary<string, ClusterDay>();
-
-            Point p = null;
-            // Leaving home
-            c_home.days.Add(DateTime.Today.ToShortDateString(), new ClusterDay());
-
-            p = new Point(1.0, 1.0);
-            p.cluster = c_home;
-            p.SetTime(DateTime.Today.AddHours(6));
-            points.Add(p);
-            c_home.days[DateTime.Today.ToShortDateString()].points.Add(p);
-
-            p = new Point(1.0, 1.0);
-            p.cluster = c_home;
-            p.SetTime(DateTime.Today.AddHours(7));
-            points.Add(p);
-            c_home.days[DateTime.Today.ToShortDateString()].points.Add(p);
-
-            // Travel
-            p = new Point(1.5, 1.5);
-            p.cluster = null;
-            p.SetTime(DateTime.Today.AddHours(8));
-            points.Add(p);
-
-            // Enter work
-            c_work.days.Add(DateTime.Today.ToShortDateString(), new ClusterDay());
-
-            p = new Point(2.0, 2.0);
-            p.cluster = c_work;
-            p.SetTime(DateTime.Today.AddHours(9));
-            points.Add(p);
-            c_work.days[DateTime.Today.ToShortDateString()].points.Add(p);
-
-            p = new Point(2.0, 2.0);
-            p.cluster = c_work;
-            p.SetTime(DateTime.Today.AddHours(10));
-            points.Add(p);
-            c_work.days[DateTime.Today.ToShortDateString()].points.Add(p);
-
-            // Leave work
-            p = new Point(2.0, 2.0);
-            p.cluster = c_work;
-            p.SetTime(DateTime.Today.AddHours(11));
-            points.Add(p);
-            c_work.days[DateTime.Today.ToShortDateString()].points.Add(p);
-
-            // Travel
-            p = new Point(1.5, 1.5);
-            p.cluster = null;
-            p.SetTime(DateTime.Today.AddHours(12));
-            points.Add(p);
-
-            // Enter home
-            p = new Point(1.0, 1.0);
-            p.cluster = c_home;
-            p.SetTime(DateTime.Today.AddHours(13));
-            points.Add(p);
-            c_home.days[DateTime.Today.ToShortDateString()].points.Add(p);
-
-            p = new Point(1.0, 1.0);
-            p.cluster = c_home;
-            p.SetTime(DateTime.Today.AddHours(14));
-            points.Add(p);
-            c_home.days[DateTime.Today.ToShortDateString()].points.Add(p);
-
-            return points;
         }
 
     }
