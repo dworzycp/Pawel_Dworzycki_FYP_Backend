@@ -1,4 +1,9 @@
-// http://www.c-sharpcorner.com/uploadfile/b942f9/implementing-the-dbscan-algorithm-using-C-Sharp/ 
+/**
+ * DBSCAN based on http://www.c-sharpcorner.com/uploadfile/b942f9/implementing-the-dbscan-algorithm-using-C-Sharp/ 
+ *
+ * @author Pawel Dworzycki
+ * @version 11/02/2018
+ */
 
 using System;
 using System.Collections.Generic;
@@ -11,47 +16,16 @@ class DBSCAN
 
     public DBSCAN(List<Point> points)
     {
-        double eps = 0.0005;
+        double eps = 0.002;
         int minPts = 20;
         clusters = GetClusters(points, eps, minPts);
-
-        #region Console Logging
-        // Console.Clear();
-        // // print clusters to console
-        // int total = 0;
-        // for (int i = 0; i < clusters.Count; i++)
-        // {
-        //     int count = clusters[i].Count;
-        //     total += count;
-        //     string plural = (count != 1) ? "s" : "";
-        //     Console.WriteLine("\nCluster {0} consists of the following {1} point{2} :\n", i + 1, count, plural);
-        //     foreach (Point p in clusters[i]) Console.WriteLine(" {0} ", p);
-        //     Console.WriteLine();
-        // }
-        // // print any points which are NOISE
-        // total = points.Count - total;
-        // if (total > 0)
-        // {
-        //     string plural = (total != 1) ? "s" : "";
-        //     string verb = (total != 1) ? "are" : "is";
-        //     Console.WriteLine("\nThe following {0} point{1} {2} NOISE :\n", total, plural, verb);
-        //     foreach (Point p in points)
-        //     {
-        //         if (p.ClusterId == Point.NOISE) Console.WriteLine(" {0} ", p);
-        //     }
-        //     Console.WriteLine();
-        // }
-        // else
-        // {
-        //     Console.WriteLine("\nNo points are NOISE");
-        // }
-        // Console.ReadKey();
-        #endregion
     }
 
     static List<List<Point>> GetClusters(List<Point> points, double eps, int minPts)
     {
-        if (points == null) return null;
+        if (points == null) 
+            return null;
+            
         List<List<Point>> clusters = new List<List<Point>>();
         eps *= eps; // square eps
         int clusterId = 1;
@@ -59,9 +33,8 @@ class DBSCAN
         {
             Point p = points[i];
             if (p.ClusterId == Point.UNCLASSIFIED)
-            {
-                if (ExpandCluster(points, p, clusterId, eps, minPts)) clusterId++;
-            }
+                if (ExpandCluster(points, p, clusterId, eps, minPts)) 
+                    clusterId++;
         }
         // sort out points into their clusters, if any
         int maxClusterId = points.OrderBy(p => p.ClusterId).Last().ClusterId;

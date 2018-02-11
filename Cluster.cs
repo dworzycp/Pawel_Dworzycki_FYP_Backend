@@ -12,6 +12,7 @@ using System.Linq;
 class Cluster
 {
     public Dictionary<String, ClusterDay> days;
+    public String name;
 
     public Cluster()
     {

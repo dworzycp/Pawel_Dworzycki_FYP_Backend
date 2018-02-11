@@ -3,7 +3,7 @@
  * Generates random points with a given radius to simulate real user
  *
  * @author Pawel Dworzycki
- * @version 09/02/2018
+ * @version 11/02/2018
  */
 using System;
 using System.Collections.Generic;
@@ -31,10 +31,10 @@ class FakeDataGen
         // For the next 7 days, generate data every 30 mins
         for (int i = 0; i < 7; i++)
         {
-            if (time.DayOfWeek == DayOfWeek.Monday      ||
-                time.DayOfWeek == DayOfWeek.Tuesday     ||
-                time.DayOfWeek == DayOfWeek.Wednesday   ||
-                time.DayOfWeek == DayOfWeek.Thursday    ||
+            if (time.DayOfWeek == DayOfWeek.Monday ||
+                time.DayOfWeek == DayOfWeek.Tuesday ||
+                time.DayOfWeek == DayOfWeek.Wednesday ||
+                time.DayOfWeek == DayOfWeek.Thursday ||
                 time.DayOfWeek == DayOfWeek.Friday)
             {
                 // Weekday
@@ -48,36 +48,37 @@ class FakeDataGen
                 for (int k = 0; k < 15; k++)
                 {
                     Point p = GenerateRandomPoint(homeLat, homeLng, radiusInMeters, time);
-                    points.Add(p);
+                    AddPoint(p, points, time, i);
                     time = time.AddMinutes(30);
                 }
                 // Between 7:30 and 9:00 (4 points travelling/NOISE)
                 // For this the line between two points and get the co-ordinates on that line
-                foreach (Point pt in SplitLine(4))
+                // n - 2 ; as the splits do not include end points
+                foreach (Point p in SplitLine(4 - 2))
                 {
-                    pt.SetTime(time);
-                    points.Add(pt);
+                    p.SetTime(time);
+                    AddPoint(p, points, time, i);
                     time = time.AddMinutes(30);
                 }
                 // Between 9:30 and 16:30 (15 points at work)
                 for (int k = 0; k < 15; k++)
                 {
                     Point p = GenerateRandomPoint(workLat, workLng, radiusInMeters, time);
-                    points.Add(p);
+                    AddPoint(p, points, time, i);
                     time = time.AddMinutes(30);
                 }
                 // Between 17:00 and 19:00 (5 points travelling/NOISE)
-                foreach (Point pt in SplitLine(5))
+                foreach (Point p in SplitLine(5 - 2, true))
                 {
-                    pt.SetTime(time);
-                    points.Add(pt);
+                    p.SetTime(time);
+                    AddPoint(p, points, time, i);
                     time = time.AddMinutes(30);
                 }
                 // Between 19:30 and 23:30 (9 points at home)
                 for (int k = 0; k < 9; k++)
                 {
                     Point p = GenerateRandomPoint(homeLat, homeLng, radiusInMeters, time);
-                    points.Add(p);
+                    AddPoint(p, points, time, i);
                     time = time.AddMinutes(30);
                 }
             }
@@ -95,8 +96,7 @@ class FakeDataGen
                 //                 20% chance of being within 250m of home
                 // 20:30 - 23:30 - 90% chance of being within 50m of home
                 //                 10% chance of being within 250m of home
-                // TODO: find if there's a study which worked out above
-
+                
                 Random rng = new Random();
                 int radius;
 
@@ -105,16 +105,12 @@ class FakeDataGen
                 {
                     int r = rng.Next(100);
                     if (r < 90)
-                    {
                         radius = 50;
-                    }
                     else
-                    {
                         radius = 250;
-                    }
 
                     Point p = GenerateRandomPoint(homeLat, homeLng, radius, time);
-                    points.Add(p);
+                    AddPoint(p, points, time, i);
                     time = time.AddMinutes(30);
                 }
                 // 13:00 - 17:00 (9 points)
@@ -122,20 +118,14 @@ class FakeDataGen
                 {
                     int r = rng.Next(100);
                     if (r < 40)
-                    {
                         radius = 500;
-                    }
                     else if (r > 40 && r < 80)
-                    {
                         radius = 1500;
-                    }
                     else
-                    {
                         radius = 2500;
-                    }
 
                     Point p = GenerateRandomPoint(homeLat, homeLng, radius, time);
-                    points.Add(p);
+                    AddPoint(p, points, time, i);
                     time = time.AddMinutes(30);
                 }
                 // 17:30 - 20:00 (6 points)
@@ -143,16 +133,12 @@ class FakeDataGen
                 {
                     int r = rng.Next(100);
                     if (r < 80)
-                    {
                         radius = 50;
-                    }
                     else
-                    {
                         radius = 250;
-                    }
 
                     Point p = GenerateRandomPoint(homeLat, homeLng, radius, time);
-                    points.Add(p);
+                    AddPoint(p, points, time, i);
                     time = time.AddMinutes(30);
                 }
                 // 20:30 - 23:30 (7 points)
@@ -160,22 +146,22 @@ class FakeDataGen
                 {
                     int r = rng.Next(100);
                     if (r < 90)
-                    {
                         radius = 50;
-                    }
                     else
-                    {
                         radius = 250;
-                    }
 
                     Point p = GenerateRandomPoint(homeLat, homeLng, radius, time);
-                    points.Add(p);
+                    AddPoint(p, points, time, i);
                     time = time.AddMinutes(30);
                 }
             }
-            // Add 30 mins to go to midnight next day
-            time = time.AddMinutes(30);
         }
+    }
+
+    private void AddPoint(Point point, List<Point> collectionOfPoints, DateTime time, int i)
+    {
+        collectionOfPoints.Add(point);
+        //Console.WriteLine("Added a point for " + point.createdAt.ToShortDateString() + " at " + time.ToShortTimeString() + " (run: " + i + ")");
     }
 
     /**
@@ -221,17 +207,30 @@ class FakeDataGen
     }
 
     // Based on https://stackoverflow.com/questions/21249739/how-to-calculate-the-points-between-two-given-points-and-given-distance
-    public static IList<Point> SplitLine(int count)
+    public static IList<Point> SplitLine(int count, bool reverse = false)
     {
         count = count + 1;
 
-        Double d = Math.Sqrt((homeLat - workLat) * (homeLat - workLat) + (homeLng - workLng) * (homeLng - workLng)) / count;
-        Double fi = Math.Atan2(workLng - homeLng, workLat - homeLat);
+        double startLat = homeLat;
+        double startLng = homeLng;
+        double endLat = workLat;
+        double endLng = workLng;
+
+        if (reverse == true)
+        {
+            startLat = workLat;
+            startLng = workLng;
+            endLat = homeLat;
+            endLng = homeLng;
+        }
+
+        Double d = Math.Sqrt((startLat - endLat) * (startLat - endLat) + (startLng - endLng) * (startLng - endLng)) / count;
+        Double fi = Math.Atan2(endLng - startLng, endLat - startLat);
 
         List<Point> points = new List<Point>(count + 1);
 
         for (int i = 0; i <= count; ++i)
-            points.Add(new Point(homeLat + i * d * Math.Cos(fi), homeLng + i * d * Math.Sin(fi)));
+            points.Add(new Point(startLat + i * d * Math.Cos(fi), startLng + i * d * Math.Sin(fi)));
 
         return points;
     }

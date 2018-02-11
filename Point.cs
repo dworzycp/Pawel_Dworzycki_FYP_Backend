@@ -1,7 +1,7 @@
 /**
  * This class defines a GPS Coordinate
  * @author Pawel Dworzycki
- * @version 06/02/2018
+ * @version 09/02/2018
  */
 using System;
 using System.Collections.Generic;
@@ -19,6 +19,8 @@ class Point
     public int ClusterId;
     public const int UNCLASSIFIED = 0;
     public const int NOISE = -1;
+
+    public Cluster cluster;
 
     public Point(double latitude, double longitude)
     {
