@@ -61,8 +61,6 @@ class Cluster
                 }
             }
 
-        Console.WriteLine("Point " + pointFurthest.latitude + ", " + pointFurthest.longitude);
-
         radiusInMeters = distance;
     }
 
