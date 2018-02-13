@@ -11,8 +11,6 @@ namespace Backend
             List<Point> points = new List<Point>();
             List<Cluster> clusters = new List<Cluster>();
 
-            Dictionary<String, List<Point>> pointsByDay = new Dictionary<string, List<Point>>();
-
             #region Actual DB connection
             // // Retrieve GPS coordinates from DB for userId 1
             // Database db = new Database();
@@ -43,37 +41,15 @@ namespace Backend
                 clusters.Add(c);
             }
 
-            // Also sort the points by day without clutsers
-            // TODO redundant?
-            SortPointsByDay sort2 = new SortPointsByDay(points);
-            pointsByDay = sort2.daysWithoutClusters;
-
             // For every point in a cluster -- reference cluster in the point
             foreach (Cluster c in clusters)
-            {
                 foreach (ClusterDay cd in c.days.Values)
-                {
                     foreach (Point p in cd.points)
-                    {
                         p.cluster = c;
-                    }
-                }
-            }
 
-            // Work out the time a user leaves and enters clusters
-            // TODO which points to pass? all? clusters all? days only?
-            // ^^ doesn't matter but what's best?
-            // TimeLeaveAndEnterClusterDays times = new TimeLeaveAndEnterClusterDays(points);
+            TimeLeaveAndEnterClusterDays times = new TimeLeaveAndEnterClusterDays(points);
 
-
-            foreach (List<Point> points_day in pointsByDay.Values)
-            {
-                TimeLeaveAndEnterClusterDays times = new TimeLeaveAndEnterClusterDays(points_day);
-            }
-
-            //TimeLeaveAndEnterClusterDays times = new TimeLeaveAndEnterClusterDays(fakeDataForTimeTest());
-
-            // TODO now need to average it out between past weeks
+            // TODO histogram
 
             // PRINT
             foreach (Cluster c in clusters)
