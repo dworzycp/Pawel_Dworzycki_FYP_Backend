@@ -48,8 +48,11 @@ namespace Backend
                         p.cluster = c;
 
             TimeLeaveAndEnterClusterDays times = new TimeLeaveAndEnterClusterDays(points);
-
             // TODO histogram
+
+            // Calculate cluster's mid point and radius
+            foreach (Cluster c in clusters)
+                c.CalculateRadius();
 
             // PRINT
             foreach (Cluster c in clusters)
@@ -59,6 +62,7 @@ namespace Backend
                 Console.WriteLine("#######################################");
                 Console.WriteLine("### " + " NEW CLUSTER " + " ###");
                 Console.WriteLine("#######################################");
+                Console.WriteLine("Centre " + c.centrePoint.ToString() + " radius " + c.radiusInMeters);
                 foreach (KeyValuePair<String, ClusterDay> cd_pair in c.days)
                 {
                     Console.WriteLine();

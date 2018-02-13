@@ -1,15 +1,12 @@
 /**
  * This class defines a GPS Coordinate
  * @author Pawel Dworzycki
- * @version 09/02/2018
+ * @version 12/02/2018
  */
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-// TO CHECK
-// What if a point is classified as 'NOISE' -- can it never be used again??
-// Can points become part of different clusters, i.e.: merge
+using System.Device.Location;
 
 class Point
 {
@@ -28,27 +25,19 @@ class Point
         this.longitude = longitude;
     }
 
-    // TODO : there's a bug, it always returns 0??
-    // https://stackoverflow.com/questions/26157199/how-to-calculate-distance-between-2-coordinates -- LOOK AT THIS
-    public double DistanceBetweenPointsInMeters(Point p1, Point p2)
+    /// <summary>
+    /// Return the distance between this point and another using Haversine formula
+    /// </summary>
+    /// <param name="otherPoint">Point to calculate distance to</param>
+    /// <returns></returns>
+    public double DistanceBetweenPointsInMeters(Point otherPoint)
     {
-        // Using Haversine forumla
-        // Earth's radius in meters
-        var R = 6371e3;
-        // Find the difference between the two points
-        var dLat = toRadians(p2.latitude - p1.latitude);
-        var dLon = toRadians(p2.longitude - p1.longitude);
-        // Convert latitudes to radians for future use
-        p1.latitude = toRadians(p1.latitude);
-        p2.latitude = toRadians(p2.latitude);
-
-        // Apply Haversine forumla
-        var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) + Math.Sin(dLon / 2) *
-                Math.Sin(dLon / 2) * Math.Cos(p1.latitude) * Math.Cos(p2.latitude);
-        var c = 2 * Math.Asin(Math.Sqrt(a));
-        return R * 2 * Math.Asin(Math.Sqrt(a));
+        GeoCoordinate gp1 = new GeoCoordinate(latitude, longitude);
+        GeoCoordinate gp2 = new GeoCoordinate(otherPoint.latitude, otherPoint.longitude);
+        return gp1.GetDistanceTo(gp2);
     }
 
+    // TODO replace with ^^??
     public static double DistanceSquared(Point p1, Point p2)
     {
         double diffX = p2.latitude - p1.latitude;
@@ -56,6 +45,11 @@ class Point
         return diffX * diffX + diffY * diffY;
     }
 
+    /// <summary>
+    /// Convert an angle into radians
+    /// </summary>
+    /// <param name="angle">Angle in degrees</param>
+    /// <returns></returns>
     private static double toRadians(double angle)
     {
         return Math.PI * angle / 180.0;
