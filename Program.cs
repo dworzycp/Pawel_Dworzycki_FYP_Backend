@@ -15,9 +15,7 @@ namespace Backend
             // // Retrieve GPS coordinates from DB for userId 1
             // Database db = new Database();
             // points = db.GetUnclassifiedCoordinates("1", "2017-12-12");
-
             // //Console.WriteLine(points[1].DistanceBetweenPointsInMeters(points[1], points[2]));
-
             // //foreach (Point p in points) Console.WriteLine(p.ToString());
             #endregion
 
@@ -54,13 +52,19 @@ namespace Backend
             foreach (Cluster c in clusters)
                 c.CalculateRadius();
 
+            // Find HOME and WORK clusters
+            IdentifyHomeAndWorkClusters idCLusters = new IdentifyHomeAndWorkClusters(clusters);
+
             // PRINT
             foreach (Cluster c in clusters)
             {
                 Console.WriteLine();
                 Console.WriteLine();
                 Console.WriteLine("#######################################");
-                Console.WriteLine("### " + " NEW CLUSTER " + " ###");
+                if (c.SemanticLabel != "" || c.SemanticLabel != null)
+                    Console.WriteLine("### " + c.SemanticLabel + " ###");
+                else
+                    Console.WriteLine("### " + " NEW CLUSTER " + " ###");
                 Console.WriteLine("#######################################");
                 Console.WriteLine("Centre " + c.centrePoint.ToString() + " radius " + c.radiusInMeters);
                 foreach (KeyValuePair<String, ClusterDay> cd_pair in c.days)
@@ -73,20 +77,6 @@ namespace Backend
                     Console.WriteLine("Leave time: " + cd_pair.Value.avgLeaveTime);
                 }
             }
-
-            // foreach (List<Point> pts in pointsByDay.Values)
-            // {
-            //     Console.WriteLine("#######################################");
-            //     Console.WriteLine("#### " + " NEW DAY " + " ###");
-            //     Console.WriteLine("#######################################");
-            //     foreach (Point p in pts)
-            //     {
-            //         if (p.cluster != null)
-            //             Console.WriteLine(p.latitude + ", " + p.longitude + "  - " + p.cluster.name + " - " + p.createdAt);
-            //         else
-            //             Console.WriteLine(p.latitude + ", " + p.longitude +  "  - NOISE" + " - " + p.createdAt);
-            //     }
-            // }
 
         }
 

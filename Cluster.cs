@@ -2,7 +2,7 @@
  * This class models a cluster of co-ordinates
  * @author Pawel Dworzycki
  *
- * @version 13/02/2018
+ * @version 17/02/2018
  */
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,8 @@ class Cluster
     public String name;
     public Point centrePoint;
     public double radiusInMeters;
+    // If the label isn't HOME or WORK get it from GPS data -- Google API?
+    public string SemanticLabel = "";
 
     public Cluster()
     {
