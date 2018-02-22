@@ -11,7 +11,6 @@ using System.Linq;
 
 class Cluster
 {
-    public Dictionary<String, ClusterDay> days;
     public GeoPoint centrePoint;
     public double radiusInMeters;
     // If the label isn't HOME or WORK get it from GPS data -- Google API?
@@ -22,7 +21,6 @@ class Cluster
 
     public Cluster()
     {
-        days = new Dictionary<String, ClusterDay>();
         points = new List<GeoPoint>();
     }
 
