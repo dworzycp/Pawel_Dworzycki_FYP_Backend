@@ -1,8 +1,8 @@
 /**
- * Processes a point
+ * Assigns a point to its user
  *
  * @author Pawel Dworzycki
- * @version 20/02/2018
+ * @version 22/02/2018
  */
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ class AssignPoints
 
     public AssignPoints(List<GeoPoint> points, Dictionary<string, User> userIdToUserMap)
     {
-        // Assign points to users and days
+        // Assign points to users
         foreach (GeoPoint p in points)
             SortPointsByUserByDay(p, userIdToUserMap);
     }
@@ -24,11 +24,9 @@ class AssignPoints
         // Check if user already exists
         if (userIdToUserMap.ContainsKey(p.userId))
         {
-            // Add the point to the list of points for its day
+            // Add the point to the user's list of points
             User user = userIdToUserMap[p.userId];
             user.points.Add(p);
-            Day day = user.GetDay(p.createdAt.DayOfWeek);
-            day.AddGPSpoint(p);
         }
         else
         {

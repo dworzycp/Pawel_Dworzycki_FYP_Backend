@@ -2,7 +2,7 @@
  * Sorts all of the GPS co-ordinates by day
  *
  * @author Pawel Dworzycki
- * @version 21/02/2018
+ * @version 22/02/2018
  */
 using System;
 using System.Collections.Generic;
@@ -12,11 +12,6 @@ class SortPointsByDay
 {
 
     public SortPointsByDay(List<GeoPoint> points, User user)
-    {
-        SplitPointsByDay(user, points);
-    }
-
-    private void SplitPointsByDay(User user, List<GeoPoint> points)
     {
         foreach (GeoPoint p in points)
             SortPoint(user, p);

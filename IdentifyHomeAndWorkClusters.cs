@@ -4,7 +4,7 @@
  * The cluster with the second most time as WORK
  *
  * @author Pawel Dworzycki
- * @version 17/02/2018
+ * @version 22/02/2018
  */
 using System;
 using System.Collections.Generic;
@@ -16,21 +16,18 @@ class IdentifyHomeAndWorkClusters
 
     Dictionary<Cluster, double> clusterAndStayTime;
 
-    public IdentifyHomeAndWorkClusters(List<Cluster> clusters)
+    public IdentifyHomeAndWorkClusters(Dictionary<string, Cluster> clusters)
     {
         clusterAndStayTime = new Dictionary<Cluster, double>();
 
         // Work out how long a user spends in each cluster
-        foreach (Cluster c in clusters)
+        foreach (Cluster c in clusters.Values)
         {
             double timeSpentInCluster = 0.0;
             // Get the first and last co-ords in the cluster for each day
-            foreach (ClusterDay cd in c.days.Values)
-            {
-                GeoPoint enterPoint = cd.points[0];
-                GeoPoint lastPoint = cd.points[cd.points.Count - 1];
-                timeSpentInCluster = (lastPoint.createdAt - enterPoint.createdAt).TotalMinutes;
-            }
+            GeoPoint enterPoint = c.points[0];
+            GeoPoint lastPoint = c.points[c.points.Count - 1];
+            timeSpentInCluster = (lastPoint.createdAt - enterPoint.createdAt).TotalMinutes;
             clusterAndStayTime.Add(c, timeSpentInCluster);
         }
 

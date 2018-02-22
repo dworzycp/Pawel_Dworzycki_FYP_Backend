@@ -16,6 +16,7 @@ namespace Backend
             FakeDataGen fdg = new FakeDataGen(14);
 
             // Assign all of the points to users
+            // IMPORTANT: this also creates users
             AssignPoints pp = new AssignPoints(fdg.points, userIdToUserMap);
 
             // Find clusters for each user
@@ -41,25 +42,37 @@ namespace Backend
                     u.idToClusterMap.Add(c.clusterId, c);
                 }
 
-                // Find historical journeys
                 foreach (Day d in u.days)
                 {
+                    // Now that all of the points have been added with cluster references
+                    // Sort them by creation time
+                    d.historialGPSData.Sort((x, y) => DateTime.Compare(x.createdAt, y.createdAt));
+
+                    // Find historical journeys
                     HistoricalJourneys hj = new HistoricalJourneys(d.historialGPSData, u);
                 }
 
                 // Calculate cluster's mid point and radius
                 foreach (Cluster c in u.idToClusterMap.Values)
                     c.CalculateRadius();
+
+                // Identify HOME and WORK clusters
+                IdentifyHomeAndWorkClusters idCLusters = new IdentifyHomeAndWorkClusters(u.idToClusterMap);
             }
 
             // Print
+            if (userIdToUserMap.Count == 0)
+            {
+                Console.WriteLine("No data has been processed.");
+            }
+
             foreach (User u in userIdToUserMap.Values)
             {
                 Console.WriteLine("User ID - " + u.userId);
                 Console.WriteLine("Clusters - " + u.idToClusterMap.Values.Count);
                 foreach (Cluster c in u.idToClusterMap.Values)
                 {
-                    Console.WriteLine("Cluster " + c.clusterId + " centre at - " + c.centrePoint + " with r - " + c.radiusInMeters);
+                    Console.WriteLine("Cluster " + c.SemanticLabel + " centre at - " + c.centrePoint + " with r - " + c.radiusInMeters);
                 }
                 Console.WriteLine();
 
@@ -72,6 +85,11 @@ namespace Backend
                     {
                         Console.WriteLine(j.ToString());
                     }
+                    // foreach (GeoPoint p in d.historialGPSData)
+                    // {
+                    //     //if (p.ClusterId != -1 && p.ClusterId != 0)
+                    //         Console.WriteLine(p.ToString() + " - " + p.createdAt.ToShortTimeString() + " - " + p.ClusterId);
+                    // }
                     Console.WriteLine();
                 }
             }
