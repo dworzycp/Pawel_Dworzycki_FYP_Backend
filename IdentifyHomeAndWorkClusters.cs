@@ -27,8 +27,8 @@ class IdentifyHomeAndWorkClusters
             // Get the first and last co-ords in the cluster for each day
             foreach (ClusterDay cd in c.days.Values)
             {
-                Point enterPoint = cd.points[0];
-                Point lastPoint = cd.points[cd.points.Count - 1];
+                GeoPoint enterPoint = cd.points[0];
+                GeoPoint lastPoint = cd.points[cd.points.Count - 1];
                 timeSpentInCluster = (lastPoint.createdAt - enterPoint.createdAt).TotalMinutes;
             }
             clusterAndStayTime.Add(c, timeSpentInCluster);

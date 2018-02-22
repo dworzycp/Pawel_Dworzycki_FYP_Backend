@@ -18,9 +18,9 @@ class Database
         connection = new SqlConnection("Server=tcp:pawelfypdb.database.windows.net,1433;Initial Catalog=PawelFYPDB;Persist Security Info=True;User Id=pawel;Password=Twirlbites11");
     }
 
-    public List<Point> GetUnclassifiedCoordinates(String userId, String date)
+    public List<GeoPoint> GetUnclassifiedCoordinates(String userId, String date)
     {
-        List<Point> points = new List<Point>();
+        List<GeoPoint> points = new List<GeoPoint>();
         string cmdString = "SELECT latitude, longitude FROM GPS_Coords WHERE user_id = '" + userId + "' AND clusterId IS NULL AND createdAt LIKE '" + date + "%'";
 
         try
@@ -36,7 +36,7 @@ class Database
                     {
                         var lat = Convert.ToDouble(reader["latitude"].ToString());
                         var lon = Convert.ToDouble(reader["longitude"].ToString());
-                        Point p = new Point(lat, lon);
+                        GeoPoint p = new GeoPoint(lat, lon, userId);
                         points.Add(p);
                     }
                 }

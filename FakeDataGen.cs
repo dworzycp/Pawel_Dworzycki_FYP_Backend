@@ -21,15 +21,17 @@ class FakeDataGen
     private const double workLng = -1.890520;
     // Radius
     private const int radiusInMeters = 50;
+    // Fake userId
+    private const string userId = "1";
 
-    public List<Point> points { get; private set; }
+    public List<GeoPoint> points { get; private set; }
 
-    public FakeDataGen()
+    public FakeDataGen(int numOfDays)
     {
-        points = new List<Point>();
+        points = new List<GeoPoint>();
         DateTime time = DateTime.Today;
         // For the next 7 days, generate data every 30 mins
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < numOfDays; i++)
         {
             if (time.DayOfWeek == DayOfWeek.Monday ||
                 time.DayOfWeek == DayOfWeek.Tuesday ||
@@ -47,14 +49,14 @@ class FakeDataGen
                 // Between 00:00 and 7:00 (15 points at home)
                 for (int k = 0; k < 15; k++)
                 {
-                    Point p = GenerateRandomPoint(homeLat, homeLng, radiusInMeters, time);
+                    GeoPoint p = GenerateRandomPoint(homeLat, homeLng, radiusInMeters, time);
                     AddPoint(p, points, time, i);
                     time = time.AddMinutes(30);
                 }
                 // Between 7:30 and 9:00 (4 points travelling/NOISE)
                 // For this the line between two points and get the co-ordinates on that line
                 // n - 2 ; as the splits do not include end points
-                foreach (Point p in SplitLine(4 - 2))
+                foreach (GeoPoint p in SplitLine(4 - 2))
                 {
                     p.SetTime(time);
                     AddPoint(p, points, time, i);
@@ -63,12 +65,12 @@ class FakeDataGen
                 // Between 9:30 and 16:30 (15 points at work)
                 for (int k = 0; k < 15; k++)
                 {
-                    Point p = GenerateRandomPoint(workLat, workLng, radiusInMeters, time);
+                    GeoPoint p = GenerateRandomPoint(workLat, workLng, radiusInMeters, time);
                     AddPoint(p, points, time, i);
                     time = time.AddMinutes(30);
                 }
                 // Between 17:00 and 19:00 (5 points travelling/NOISE)
-                foreach (Point p in SplitLine(5 - 2, true))
+                foreach (GeoPoint p in SplitLine(5 - 2, true))
                 {
                     p.SetTime(time);
                     AddPoint(p, points, time, i);
@@ -77,7 +79,7 @@ class FakeDataGen
                 // Between 19:30 and 23:30 (9 points at home)
                 for (int k = 0; k < 9; k++)
                 {
-                    Point p = GenerateRandomPoint(homeLat, homeLng, radiusInMeters, time);
+                    GeoPoint p = GenerateRandomPoint(homeLat, homeLng, radiusInMeters, time);
                     AddPoint(p, points, time, i);
                     time = time.AddMinutes(30);
                 }
@@ -96,7 +98,7 @@ class FakeDataGen
                 //                 20% chance of being within 250m of home
                 // 20:30 - 23:30 - 90% chance of being within 50m of home
                 //                 10% chance of being within 250m of home
-                
+
                 Random rng = new Random();
                 int radius;
 
@@ -109,7 +111,7 @@ class FakeDataGen
                     else
                         radius = 250;
 
-                    Point p = GenerateRandomPoint(homeLat, homeLng, radius, time);
+                    GeoPoint p = GenerateRandomPoint(homeLat, homeLng, radius, time);
                     AddPoint(p, points, time, i);
                     time = time.AddMinutes(30);
                 }
@@ -124,7 +126,7 @@ class FakeDataGen
                     else
                         radius = 2500;
 
-                    Point p = GenerateRandomPoint(homeLat, homeLng, radius, time);
+                    GeoPoint p = GenerateRandomPoint(homeLat, homeLng, radius, time);
                     AddPoint(p, points, time, i);
                     time = time.AddMinutes(30);
                 }
@@ -137,7 +139,7 @@ class FakeDataGen
                     else
                         radius = 250;
 
-                    Point p = GenerateRandomPoint(homeLat, homeLng, radius, time);
+                    GeoPoint p = GenerateRandomPoint(homeLat, homeLng, radius, time);
                     AddPoint(p, points, time, i);
                     time = time.AddMinutes(30);
                 }
@@ -150,7 +152,7 @@ class FakeDataGen
                     else
                         radius = 250;
 
-                    Point p = GenerateRandomPoint(homeLat, homeLng, radius, time);
+                    GeoPoint p = GenerateRandomPoint(homeLat, homeLng, radius, time);
                     AddPoint(p, points, time, i);
                     time = time.AddMinutes(30);
                 }
@@ -158,7 +160,7 @@ class FakeDataGen
         }
     }
 
-    private void AddPoint(Point point, List<Point> collectionOfPoints, DateTime time, int i)
+    private void AddPoint(GeoPoint point, List<GeoPoint> collectionOfPoints, DateTime time, int i)
     {
         collectionOfPoints.Add(point);
         //Console.WriteLine("Added a point for " + point.createdAt.ToShortDateString() + " at " + time.ToShortTimeString() + " (run: " + i + ")");
@@ -168,7 +170,7 @@ class FakeDataGen
      * Create a random point within a given radius
      * based on: https://stackoverflow.com/questions/36905396/randomly-generating-a-latlng-within-a-radius-yields-a-point-out-of-bounds
      */
-    public Point GenerateRandomPoint(double lat, double lng, int radiusInMeters, DateTime fakeTimeOfPoint)
+    public GeoPoint GenerateRandomPoint(double lat, double lng, int radiusInMeters, DateTime fakeTimeOfPoint)
     {
         double x0 = lng;
         double y0 = lat;
@@ -196,7 +198,7 @@ class FakeDataGen
         foundLatitude = y0 + y;
         foundLongitude = x0 + new_x;
 
-        Point point = new Point(foundLatitude, foundLongitude);
+        GeoPoint point = new GeoPoint(foundLatitude, foundLongitude, userId);
         point.SetTime(fakeTimeOfPoint);
         return point;
     }
@@ -207,7 +209,7 @@ class FakeDataGen
     }
 
     // Based on https://stackoverflow.com/questions/21249739/how-to-calculate-the-points-between-two-given-points-and-given-distance
-    public static IList<Point> SplitLine(int count, bool reverse = false)
+    public static IList<GeoPoint> SplitLine(int count, bool reverse = false)
     {
         count = count + 1;
 
@@ -227,10 +229,10 @@ class FakeDataGen
         Double d = Math.Sqrt((startLat - endLat) * (startLat - endLat) + (startLng - endLng) * (startLng - endLng)) / count;
         Double fi = Math.Atan2(endLng - startLng, endLat - startLat);
 
-        List<Point> points = new List<Point>(count + 1);
+        List<GeoPoint> points = new List<GeoPoint>(count + 1);
 
         for (int i = 0; i <= count; ++i)
-            points.Add(new Point(startLat + i * d * Math.Cos(fi), startLng + i * d * Math.Sin(fi)));
+            points.Add(new GeoPoint(startLat + i * d * Math.Cos(fi), startLng + i * d * Math.Sin(fi), userId));
 
         return points;
     }

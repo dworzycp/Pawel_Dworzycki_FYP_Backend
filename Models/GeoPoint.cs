@@ -1,28 +1,31 @@
 /**
  * This class defines a GPS Coordinate
  * @author Pawel Dworzycki
- * @version 12/02/2018
+ * @version 21/02/2018
  */
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Device.Location;
 
-class Point
+class GeoPoint
 {
     public double latitude { get; private set; }
     public double longitude { get; private set; }
     public DateTime createdAt { get; private set; }
-    public int ClusterId;
+    public string userId { get; private set; }
+
+    public int ClusterId = 0;
     public const int UNCLASSIFIED = 0;
     public const int NOISE = -1;
 
     public Cluster cluster;
 
-    public Point(double latitude, double longitude)
+    public GeoPoint(double latitude, double longitude, string userId)
     {
         this.latitude = latitude;
         this.longitude = longitude;
+        this.userId = userId;
     }
 
     /// <summary>
@@ -30,7 +33,7 @@ class Point
     /// </summary>
     /// <param name="otherPoint">Point to calculate distance to</param>
     /// <returns></returns>
-    public double DistanceBetweenPointsInMeters(Point otherPoint)
+    public double DistanceBetweenPointsInMeters(GeoPoint otherPoint)
     {
         GeoCoordinate gp1 = new GeoCoordinate(latitude, longitude);
         GeoCoordinate gp2 = new GeoCoordinate(otherPoint.latitude, otherPoint.longitude);
@@ -38,7 +41,7 @@ class Point
     }
 
     // TODO replace with ^^??
-    public static double DistanceSquared(Point p1, Point p2)
+    public static double DistanceSquared(GeoPoint p1, GeoPoint p2)
     {
         double diffX = p2.latitude - p1.latitude;
         double diffY = p2.longitude - p1.longitude;
@@ -58,7 +61,6 @@ class Point
     public override string ToString()
     {
         return latitude.ToString() + ", " + longitude.ToString();
-        //return "(" + latitude.ToString() + ", " + longitude.ToString() + ") Created at: " + createdAt.ToString();
     }
 
     public void SetTime(DateTime newTime)

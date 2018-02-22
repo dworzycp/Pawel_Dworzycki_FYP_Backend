@@ -12,36 +12,45 @@ using System.Linq;
 class Cluster
 {
     public Dictionary<String, ClusterDay> days;
-    public String name;
-    public Point centrePoint;
+    public GeoPoint centrePoint;
     public double radiusInMeters;
     // If the label isn't HOME or WORK get it from GPS data -- Google API?
     public string SemanticLabel = "";
+    public string userId;
+    public string clusterId;
+    public List<GeoPoint> points;
 
     public Cluster()
     {
         days = new Dictionary<String, ClusterDay>();
+        points = new List<GeoPoint>();
     }
 
     public void CalculateCentrePoint()
     {
-        double totalLat = 0;
-        double totalLng = 0;
-        int count = 0;
+        if (points.Count == 0)
+            throw new Exception("There are no points assigned to cluster " + clusterId);
 
-        foreach (ClusterDay cd in days.Values)
-            foreach (Point p in cd.points)
+        try
+        {
+            double totalLat = 0;
+            double totalLng = 0;
+            int count = 0;
+
+            foreach (GeoPoint p in points)
             {
                 totalLat += p.latitude;
                 totalLng += p.longitude;
                 count++;
             }
 
-        double centreLat = totalLat / count;
-        double centreLng = totalLng / count;
+            double centreLat = totalLat / count;
+            double centreLng = totalLng / count;
 
-        Point pt = new Point(centreLat, centreLng);
-        centrePoint = pt;
+            GeoPoint pt = new GeoPoint(centreLat, centreLng, userId);
+            centrePoint = pt;
+        }
+        catch (System.Exception) { throw; }
     }
 
     public void CalculateRadius()
@@ -50,18 +59,17 @@ class Cluster
             CalculateCentrePoint();
 
         double distance = 0;
-        Point pointFurthest = new Point(0.0, 0.0);
+        GeoPoint pointFurthest = new GeoPoint(0.0, 0.0, userId);
 
-        foreach (ClusterDay cd in days.Values)
-            foreach (Point p in cd.points)
+        foreach (GeoPoint p in points)
+        {
+            double d = p.DistanceBetweenPointsInMeters(centrePoint);
+            if (d > distance)
             {
-                double d = p.DistanceBetweenPointsInMeters(centrePoint);
-                if (d > distance)
-                {
-                    distance = d;
-                    pointFurthest = p;
-                }
+                distance = d;
+                pointFurthest = p;
             }
+        }
 
         radiusInMeters = distance;
     }
