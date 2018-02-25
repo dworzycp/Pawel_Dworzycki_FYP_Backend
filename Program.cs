@@ -58,41 +58,45 @@ namespace Backend
 
                 // Identify HOME and WORK clusters
                 IdentifyHomeAndWorkClusters idCLusters = new IdentifyHomeAndWorkClusters(u.idToClusterMap);
+
+                AnalyseHistoricalJourneys a = new AnalyseHistoricalJourneys(u.days);
+                Console.WriteLine(a.ToString());
+
             }
 
             // Print
-            if (userIdToUserMap.Count == 0)
-            {
-                Console.WriteLine("No data has been processed.");
-            }
+            // if (userIdToUserMap.Count == 0)
+            // {
+            //     Console.WriteLine("No data has been processed.");
+            // }
 
-            foreach (User u in userIdToUserMap.Values)
-            {
-                Console.WriteLine("User ID - " + u.userId);
-                Console.WriteLine("Clusters - " + u.idToClusterMap.Values.Count);
-                foreach (Cluster c in u.idToClusterMap.Values)
-                {
-                    Console.WriteLine("Cluster " + c.SemanticLabel + " centre at - " + c.centrePoint + " with r - " + c.radiusInMeters);
-                }
-                Console.WriteLine();
+            // foreach (User u in userIdToUserMap.Values)
+            // {
+            //     Console.WriteLine("User ID - " + u.userId);
+            //     Console.WriteLine("Clusters - " + u.idToClusterMap.Values.Count);
+            //     foreach (Cluster c in u.idToClusterMap.Values)
+            //     {
+            //         Console.WriteLine("Cluster " + c.SemanticLabel + " centre at - " + c.centrePoint + " with r - " + c.radiusInMeters);
+            //     }
+            //     Console.WriteLine();
 
-                foreach (Day d in u.days)
-                {
-                    Console.WriteLine(d.dayOfWeek.ToString());
-                    Console.WriteLine("Historical points - " + d.historialGPSData.Count);
-                    Console.WriteLine("Historical journeys - " + d.historialJourneys.Count);
-                    foreach (Journey j in d.historialJourneys)
-                    {
-                        Console.WriteLine(j.ToString());
-                    }
-                    // foreach (GeoPoint p in d.historialGPSData)
-                    // {
-                    //     //if (p.ClusterId != -1 && p.ClusterId != 0)
-                    //         Console.WriteLine(p.ToString() + " - " + p.createdAt.ToShortTimeString() + " - " + p.ClusterId);
-                    // }
-                    Console.WriteLine();
-                }
-            }
+            //     foreach (Day d in u.days)
+            //     {
+            //         Console.WriteLine(d.dayOfWeek.ToString());
+            //         Console.WriteLine("Historical points - " + d.historialGPSData.Count);
+            //         Console.WriteLine("Historical journeys - " + d.historialJourneys.Count);
+            //         foreach (Journey j in d.historialJourneys)
+            //         {
+            //             Console.WriteLine(j.ToString());
+            //         }
+            //         // foreach (GeoPoint p in d.historialGPSData)
+            //         // {
+            //         //     //if (p.ClusterId != -1 && p.ClusterId != 0)
+            //         //         Console.WriteLine(p.ToString() + " - " + p.createdAt.ToShortTimeString() + " - " + p.ClusterId);
+            //         // }
+            //         Console.WriteLine();
+            //     }
+            // }
 
         }
 
