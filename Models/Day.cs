@@ -2,7 +2,7 @@
  * This class models a day
  *
  * @author Pawel Dworzycki
- * @version 20/02/2018
+ * @version 26/02/2018
  */
 using System;
 using System.Collections.Generic;
@@ -21,6 +21,7 @@ class Day
         this.dayOfWeek = dayOfWeek;
         historialGPSData = new List<GeoPoint>();
         historialJourneys = new List<Journey>();
+        journeys = new List<Journey>();
     }
 
     public void AddGPSpoint(GeoPoint p)
@@ -31,6 +32,11 @@ class Day
     public void AddHistoricalJourney(Journey j)
     {
         historialJourneys.Add(j);
+    }
+
+    public void AddJourney(Journey j)
+    {
+        journeys.Add(j);
     }
 
 }

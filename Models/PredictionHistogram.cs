@@ -3,7 +3,7 @@
  * All timestamps are rounded to the nearest quarter of an hour
  *
  * @author Pawel Dworzycki
- * @version 25/02/2018
+ * @version 26/02/2018
  */
 using System;
 using System.Collections.Generic;
@@ -13,9 +13,9 @@ using System.Text;
 class PredictionHistogram
 {
 
-    Dictionary<TimeSpan, int> enterTime;
-    Dictionary<TimeSpan, int> leaveTime;
-    Dictionary<int, int> destination;
+    public Dictionary<TimeSpan, int> enterTime { get; private set; }
+    public Dictionary<TimeSpan, int> leaveTime { get; private set; }
+    public Dictionary<int, int> destination { get; private set; }
 
     public PredictionHistogram()
     {

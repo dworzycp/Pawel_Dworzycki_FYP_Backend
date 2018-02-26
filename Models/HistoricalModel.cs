@@ -2,7 +2,7 @@
  * Model for historical data
  *
  * @author Pawel Dworzycki
- * @version 25/02/2018
+ * @version 26/02/2018
  */
 using System;
 using System.Collections.Generic;
@@ -12,28 +12,28 @@ using System.Text;
 class HistoricalModel
 {
 
-    Dictionary<int, PredictionHistogram> clusterHistograms;
+    public Dictionary<int, PredictionHistogram> clusterHistograms { get; private set; }
 
     public HistoricalModel()
     {
         clusterHistograms = new Dictionary<int, PredictionHistogram>();
     }
 
-    public void AddEnterTime(int destinationClusterId, DateTime time)
+    public void AddEnterTime(int destinationClusterId, DateTime time, int originClusterId)
     {
         // Check if the cluster exists
         if (clusterHistograms.ContainsKey(destinationClusterId))
         {
             clusterHistograms[destinationClusterId].AddEnterTime(time);
-            // Add destination cluster
-            clusterHistograms[destinationClusterId].AddDestinationCluster(destinationClusterId);
+            // Add destination cluster for origin cluster
+            clusterHistograms[originClusterId].AddDestinationCluster(destinationClusterId);
         }
         else
         {
             // Create the key
             clusterHistograms.Add(destinationClusterId, new PredictionHistogram());
             // Call the method again with same values
-            AddEnterTime(destinationClusterId, time);
+            AddEnterTime(destinationClusterId, time, originClusterId);
         }
     }
 

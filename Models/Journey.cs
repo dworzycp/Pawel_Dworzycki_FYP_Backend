@@ -2,7 +2,7 @@
  * This class models a journey
  *
  * @author Pawel Dworzycki
- * @version 21/02/2018
+ * @version 26/02/2018
  */
 using System;
 using System.Collections.Generic;
@@ -34,7 +34,7 @@ class Journey
 
     public override string ToString()
     {
-        return "Left cluster " + startClusterID + " at " + startTime + ". Entered cluster " + endClusterID + " at " + endTime + ". The journey lasted " + LengthInMins() + "mins." ;
+        return "Left cluster " + startClusterID + " at " + startTime + ". Entered cluster " + endClusterID + " at " + endTime + ". Journey's length " + LengthInMins() + "mins." ;
     }
 
 }

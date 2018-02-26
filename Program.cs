@@ -13,7 +13,7 @@ namespace Backend
             Dictionary<string, User> userIdToUserMap = new Dictionary<string, User>();
 
             // Get points
-            FakeDataGen fdg = new FakeDataGen(14);
+            FakeDataGen fdg = new FakeDataGen(21);
 
             // Assign all of the points to users
             // IMPORTANT: this also creates users
@@ -60,7 +60,17 @@ namespace Backend
                 IdentifyHomeAndWorkClusters idCLusters = new IdentifyHomeAndWorkClusters(u.idToClusterMap);
 
                 AnalyseHistoricalJourneys a = new AnalyseHistoricalJourneys(u.days);
-                Console.WriteLine(a.ToString());
+                //Console.WriteLine(a.ToString());
+                
+                PredictJourneys pj = new PredictJourneys(a.predictions);
+
+                foreach (Day d in u.days)
+                {
+                    foreach (Journey j in d.journeys)
+                    {
+                        Console.WriteLine(j.ToString());
+                    }
+                }
 
             }
 

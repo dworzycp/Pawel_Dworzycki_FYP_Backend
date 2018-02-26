@@ -1,9 +1,8 @@
 /**
- * This class looks at user's histoircal journeys to make prdictions
- * about future movement.
+ * This class looks at user's histoircal journeys to create histograms
  *
  * @author Pawel Dworzycki
- * @version 25/02/2018
+ * @version 26/02/2018
  */
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ using System.Text;
 class AnalyseHistoricalJourneys
 {
 
-    Dictionary<Day, HistoricalModel> predictions;
+    public Dictionary<Day, HistoricalModel> predictions { get; private set; }
 
     public AnalyseHistoricalJourneys(Day[] days)
     {
@@ -33,9 +32,9 @@ class AnalyseHistoricalJourneys
         foreach (Journey j in historicalJourneys)
         {
             // Start time of a journey is the leave time for origin cluster
-            histogram.AddLeaveTime(j.startClusterID, j.endTime);
+            histogram.AddLeaveTime(j.startClusterID, j.startTime);
             // End time of a journey is the enter time for destination cluster
-            histogram.AddEnterTime(j.endClusterID, j.endTime);
+            histogram.AddEnterTime(j.endClusterID, j.endTime, j.startClusterID);
         }
     }
 
