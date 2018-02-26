@@ -31,7 +31,6 @@ class PredictJourneys
 
             // Predict which cluster the user will go to
             int desClusterId = PredictCluster(clusterHistogram.Value.destination);
-            //Console.WriteLine(startClusterId + " " + desClusterId);
 
             // Predict end time of the journey (i.e. ENTER time for the destination cluster)
             // Check if the destination cluster has a histogram
@@ -81,7 +80,6 @@ class PredictJourneys
             if (clusValPair.Value > mostCommonValCount)
             {
                 mostCommonValCount = clusValPair.Value;
-                //Console.WriteLine("Key with highest count: " + clusValPair.Key);
                 desClusterId = clusValPair.Key;
             }
 
@@ -103,8 +101,8 @@ class PredictJourneys
         DateTime dT = DateTime.Today;
         // Add days
         for (int i = 0; i < 7; i++)
-            if (dT.DayOfWeek != d.dayOfWeek)
-                dT.AddDays(1);
+            if (d.dayOfWeek != dT.DayOfWeek)
+                dT = dT.AddDays(1);
         // Add time
         dT = dT + ts;
         return dT;

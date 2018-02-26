@@ -34,7 +34,7 @@ class Journey
 
     public override string ToString()
     {
-        return "Left cluster " + startClusterID + " at " + startTime + ". Entered cluster " + endClusterID + " at " + endTime + ". Journey's length " + LengthInMins() + "mins." ;
+        return "Origin cluster " + startClusterID + " at " + startTime + ". Destination cluster " + endClusterID + " at " + endTime + ". Journey's length " + LengthInMins() + "mins." ;
     }
 
 }
