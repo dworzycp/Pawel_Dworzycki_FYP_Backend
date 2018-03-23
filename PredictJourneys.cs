@@ -2,7 +2,7 @@
  * This class looks at user's histograms to make prdictions about future movement.
  *
  * @author Pawel Dworzycki
- * @version 26/02/2018
+ * @version 23/03/2018
  */
 using System;
 using System.Collections.Generic;
@@ -32,19 +32,22 @@ class PredictJourneys
             // Predict which cluster the user will go to
             int desClusterId = PredictCluster(clusterHistogram.Value.destination);
 
-            // Predict end time of the journey (i.e. ENTER time for the destination cluster)
-            // Check if the destination cluster has a histogram
-            if (model.clusterHistograms.ContainsKey(desClusterId) != true)
-                throw new Exception("Destination cluster does not have a histogram");
+            if (desClusterId != 0)
+            {
+                // Predict end time of the journey (i.e. ENTER time for the destination cluster)
+                // Check if the destination cluster has a histogram
+                if (model.clusterHistograms.ContainsKey(desClusterId) != true)
+                    throw new Exception("Destination cluster does not have a histogram");
 
-            try
-            {
-                DateTime endTime = PredictTime(model.clusterHistograms[desClusterId].enterTime, day);
-                CreateJourney(startTime, endTime, startClusterId, desClusterId, day);
-            }
-            catch (System.Exception)
-            {
-                throw;
+                try
+                {
+                    DateTime endTime = PredictTime(model.clusterHistograms[desClusterId].enterTime, day);
+                    CreateJourney(startTime, endTime, startClusterId, desClusterId, day);
+                }
+                catch (System.Exception)
+                {
+                    throw;
+                }
             }
         }
     }
@@ -83,17 +86,7 @@ class PredictJourneys
                 desClusterId = clusValPair.Key;
             }
 
-        if (desClusterId == 0)
-            throw new Exception("Predicted a journey with no destination cluster");
-
-        try
-        {
-            return desClusterId;
-        }
-        catch (System.Exception)
-        {
-            throw;
-        }
+        return desClusterId;
     }
 
     private DateTime TimeSpanToDateTime(TimeSpan ts, Day d)

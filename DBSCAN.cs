@@ -2,7 +2,7 @@
  * DBSCAN based on http://www.c-sharpcorner.com/uploadfile/b942f9/implementing-the-dbscan-algorithm-using-C-Sharp/ 
  *
  * @author Pawel Dworzycki
- * @version 22/02/2018
+ * @version 23/03/2018
  */
 
 using System;
@@ -16,8 +16,8 @@ class DBSCAN
 
     public DBSCAN(List<GeoPoint> points)
     {
-        double eps = 0.002;
-        int minPts = 20;
+        double eps = 0.001;
+        int minPts = 9;
         clusters = GetClusters(points, eps, minPts);
     }
 

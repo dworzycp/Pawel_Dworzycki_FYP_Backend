@@ -2,7 +2,7 @@
  * This class works out at what time the user entered and left a cluster
  *
  * @author Pawel Dworzycki
- * @version 22/02/2018
+ * @version 23/03/2018
  */
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ class HistoricalJourneys
     }
 
     /// <summary>
-    /// A cluster has been entered if points are: P(!c), P(c), P(c)
+    /// A cluster has been entered if points are: P(!c), P(!c), P(c)
     /// A cluster has been left if points are: P(c), P(c), P(!c), P(!c)
     /// </summary>
     /// <param name="points">List of co-ordinates</param>

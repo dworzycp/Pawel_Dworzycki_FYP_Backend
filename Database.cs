@@ -1,7 +1,7 @@
 /**
  * This class connects to a database and retireves data from it
  * @author Pawel Dworzycki
- * @version 25/01/2018
+ * @version 23/03/2018
  */
 
 using System;
@@ -18,10 +18,11 @@ class Database
         connection = new SqlConnection("Server=tcp:pawelfypdb.database.windows.net,1433;Initial Catalog=PawelFYPDB;Persist Security Info=True;User Id=pawel;Password=Twirlbites11");
     }
 
-    public List<GeoPoint> GetUnclassifiedCoordinates(String userId, String date)
+    public List<GeoPoint> GetUnclassifiedCoordinates()
     {
         List<GeoPoint> points = new List<GeoPoint>();
-        string cmdString = "SELECT latitude, longitude FROM GPS_Coords WHERE user_id = '" + userId + "' AND clusterId IS NULL AND createdAt LIKE '" + date + "%'";
+        string cmdString = "SELECT * FROM GPS_Coords WHERE clusterId IS NULL";
+        //string cmdString = "SELECT latitude, longitude FROM GPS_Coords WHERE user_id = '" + userId + "' AND clusterId IS NULL AND createdAt LIKE '" + date + "%'";
 
         try
         {
@@ -34,9 +35,13 @@ class Database
                 {
                     while (reader.Read())
                     {
-                        var lat = Convert.ToDouble(reader["latitude"].ToString());
-                        var lon = Convert.ToDouble(reader["longitude"].ToString());
+                        double lat = Convert.ToDouble(reader["latitude"].ToString());
+                        double lon = Convert.ToDouble(reader["longitude"].ToString());
+                        string userId = Convert.ToString(reader["user_id"].ToString());
+                        DateTime createdDate = Convert.ToDateTime(reader["actual_createdAt"].ToString());
+
                         GeoPoint p = new GeoPoint(lat, lon, userId);
+                        p.SetTime(createdDate);
                         points.Add(p);
                     }
                 }
