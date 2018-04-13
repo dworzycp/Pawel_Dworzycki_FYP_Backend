@@ -16,7 +16,7 @@ class IdentifyHomeAndWorkClusters
 
     Dictionary<Cluster, double> clusterAndStayTime;
 
-    public IdentifyHomeAndWorkClusters(Dictionary<string, Cluster> clusters)
+    public IdentifyHomeAndWorkClusters(Dictionary<string, Cluster> clusters, Database db)
     {
         clusterAndStayTime = new Dictionary<Cluster, double>();
 
@@ -34,12 +34,14 @@ class IdentifyHomeAndWorkClusters
         // Find HOME cluster
         Cluster home = FindClusterWithMostTime();
         home.SemanticLabel = "HOME";
+        // Save in DB
+        db.UpdateClustersLabel(home.clusterId, "HOME");
         // Remove HOME cluster from list
         clusterAndStayTime.Remove(home);
         // Rerun to find WORK
         Cluster work = FindClusterWithMostTime();
         work.SemanticLabel = "WORK";
-
+        db.UpdateClustersLabel(work.clusterId, "WORK");
     }
 
     private Cluster FindClusterWithMostTime()

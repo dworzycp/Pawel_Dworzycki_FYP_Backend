@@ -62,6 +62,7 @@ class HistoricalJourneys
                         {
                             // This is the leave point
                             pointAtWhichClusterIsBeingLeft = p;
+                            Console.WriteLine("L");
                         }
                     }
                     else

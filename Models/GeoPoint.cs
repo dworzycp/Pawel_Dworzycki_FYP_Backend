@@ -1,7 +1,7 @@
 /**
  * This class defines a GPS Coordinate
  * @author Pawel Dworzycki
- * @version 21/02/2018
+ * @version 13/04/2018
  */
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,7 @@ class GeoPoint
     public DateTime createdAt { get; private set; }
     public string userId { get; private set; }
 
+    //public string dbID = "";
     public int ClusterId = 0;
     public const int UNCLASSIFIED = 0;
     public const int NOISE = -1;
@@ -66,6 +67,15 @@ class GeoPoint
     public void SetTime(DateTime newTime)
     {
         createdAt = newTime;
+    }
+
+    public bool DoesPointBelongToCluster(Cluster c)
+    {
+        // Check if the distance between this point and c's centre is less than c's radius
+        if (DistanceBetweenPointsInMeters(c.centrePoint) < c.radiusInMeters)
+            return true;
+        else
+            return false;
     }
 
 }

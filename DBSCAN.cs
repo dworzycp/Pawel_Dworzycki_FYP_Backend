@@ -23,9 +23,9 @@ class DBSCAN
 
     static List<List<GeoPoint>> GetClusters(List<GeoPoint> points, double eps, int minPts)
     {
-        if (points == null) 
+        if (points == null)
             return null;
-            
+
         List<List<GeoPoint>> clusters = new List<List<GeoPoint>>();
         eps *= eps; // square eps
         int clusterId = 1;
@@ -33,7 +33,7 @@ class DBSCAN
         {
             GeoPoint p = points[i];
             if (p.ClusterId == GeoPoint.UNCLASSIFIED)
-                if (ExpandCluster(points, p, clusterId, eps, minPts)) 
+                if (ExpandCluster(points, p, clusterId, eps, minPts))
                     clusterId++;
         }
         // sort out points into their clusters, if any

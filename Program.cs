@@ -12,6 +12,7 @@ namespace Backend
             // Initialise variables
             Dictionary<string, User> userIdToUserMap = new Dictionary<string, User>();
             List<GeoPoint> dbPoints = new List<GeoPoint>();
+            List<Cluster> dbClusters = new List<Cluster>();
 
             // Get points
             // FAKE
@@ -20,33 +21,66 @@ namespace Backend
 
             // REAL
             Database db = new Database();
+            // TODO do I want to get classified points too?
             dbPoints = db.GetUnclassifiedCoordinates();
+            dbClusters = db.GetClusters();
 
             // Assign all of the points to users
+            // Also assigns existing clusters
             // IMPORTANT: this also creates users
-            AssignPoints pp = new AssignPoints(dbPoints, userIdToUserMap);
+            AssignPoints pp = new AssignPoints(dbPoints, userIdToUserMap, dbClusters);
 
             // Find clusters for each user
             foreach (User u in userIdToUserMap.Values)
             {
-                // TODO check if a point belongs to an existing cluster first
-
-                DBSCAN dbscan = new DBSCAN(u.points);
-                foreach (List<GeoPoint> dbscanCluster in dbscan.clusters)
+                // Check if a point belongs to an existing cluster first
+                foreach (GeoPoint p in u.points.ToList())
                 {
-                    // TODO check if a cluster corresponds to an existing cluster
+                    foreach (Cluster c in u.idToClusterMap.Values)
+                    {
+                        if (p.DoesPointBelongToCluster(c))
+                        {
+                            // Set p's cluster to c
+                            p.cluster = c;
+                            //p.ClusterId = c.clusterId;
+                            // Add point to cluser
+                            c.points.Add(p);
+                            // Remove point from list, so it doesn't go to DBSCAN
+                            u.unassignedPoints.Remove(p);
+                        }
+                    }
+                }
 
-                    // Create a new Cluster
-                    Cluster c = new Cluster();
-                    c.userId = u.userId;
-                    // TODO is this correct?
-                    c.clusterId = dbscanCluster[0].ClusterId.ToString();
-                    // Sort points by day
-                    SortPointsByDay sort = new SortPointsByDay(dbscanCluster, u);
-                    // Assign cluster points to cluster
-                    c.points = dbscanCluster;
-                    // Add cluster to user's list
-                    u.idToClusterMap.Add(c.clusterId, c);
+                // DBSCAN remaining points
+                if (u.unassignedPoints.Count > 0)
+                {
+                    DBSCAN dbscan = new DBSCAN(u.unassignedPoints);
+
+                    // Save new Clusters to DB and user's local list
+                    foreach (List<GeoPoint> dbscanCluster in dbscan.clusters)
+                    {
+                        // Create a new Cluster
+                        Cluster c = new Cluster();
+                        c.userId = u.userId;
+                        // TODO is this correct?
+                        c.clusterId = dbscanCluster[0].ClusterId.ToString();
+                        // Assign cluster points to cluster
+                        c.points = dbscanCluster;
+                        // Add cluster to user's list
+                        u.idToClusterMap.Add(c.clusterId, c);
+                        // Calculate cluster's mid point and radius
+                        c.CalculateRadius();
+                        // Set semtainc label
+                        c.SemanticLabel = "Location";
+                        // Save cluster in DB
+                        db.SaveCluster(c);
+                        // TODO in GPS_Coords assign clusterId to point
+                        // TODO handle noise
+                    }
+
+                    // Sort ALL points (dbscan and existing) within clusters by day
+                    SortPointsByDay sort = new SortPointsByDay(u.points, u);
+
                 }
 
                 foreach (Day d in u.days)
@@ -60,15 +94,15 @@ namespace Backend
                 }
 
                 // Calculate cluster's mid point and radius
-                foreach (Cluster c in u.idToClusterMap.Values)
-                    c.CalculateRadius();
+                // foreach (Cluster c in u.idToClusterMap.Values)
+                //     c.CalculateRadius();
 
                 // Identify HOME and WORK clusters
-                IdentifyHomeAndWorkClusters idCLusters = new IdentifyHomeAndWorkClusters(u.idToClusterMap);
+                IdentifyHomeAndWorkClusters idCLusters = new IdentifyHomeAndWorkClusters(u.idToClusterMap, db);
 
                 AnalyseHistoricalJourneys a = new AnalyseHistoricalJourneys(u.days);
-                //Console.WriteLine(a.ToString());
-                
+                // Console.WriteLine(a.ToString());
+
                 PredictJourneys pj = new PredictJourneys(a.predictions);
 
                 foreach (Day d in u.days)
@@ -87,33 +121,33 @@ namespace Backend
                 Console.WriteLine("No data has been processed. (0 users)");
             }
 
-            foreach (User u in userIdToUserMap.Values)
-            {
-                Console.WriteLine("User ID - " + u.userId);
-                Console.WriteLine("Clusters - " + u.idToClusterMap.Values.Count);
-                foreach (Cluster c in u.idToClusterMap.Values)
-                {
-                    Console.WriteLine("Cluster " + c.SemanticLabel + " centre at - " + c.centrePoint + " with r - " + c.radiusInMeters);
-                }
-                Console.WriteLine();
+            // foreach (User u in userIdToUserMap.Values)
+            // {
+            //     Console.WriteLine("User ID - " + u.userId);
+            //     Console.WriteLine("Clusters - " + u.idToClusterMap.Values.Count);
+            //     foreach (Cluster c in u.idToClusterMap.Values)
+            //     {
+            //         Console.WriteLine("Cluster " + c.SemanticLabel + " centre at - " + c.centrePoint + " with r - " + c.radiusInMeters);
+            //     }
+            //     Console.WriteLine();
 
-                foreach (Day d in u.days)
-                {
-                    Console.WriteLine(d.dayOfWeek.ToString());
-                    Console.WriteLine("Historical points - " + d.historialGPSData.Count);
-                    Console.WriteLine("Historical journeys - " + d.historialJourneys.Count);
-                    foreach (Journey j in d.historialJourneys)
-                    {
-                        Console.WriteLine(j.ToString());
-                    }
-                    // foreach (GeoPoint p in d.historialGPSData)
-                    // {
-                    //     //if (p.ClusterId != -1 && p.ClusterId != 0)
-                    //         Console.WriteLine(p.ToString() + " - " + p.createdAt.ToShortTimeString() + " - " + p.ClusterId);
-                    // }
-                    Console.WriteLine();
-                }
-            }
+            //     foreach (Day d in u.days)
+            //     {
+            //         Console.WriteLine(d.dayOfWeek.ToString());
+            //         Console.WriteLine("Historical points - " + d.historialGPSData.Count);
+            //         Console.WriteLine("Historical journeys - " + d.historialJourneys.Count);
+            //         foreach (Journey j in d.historialJourneys)
+            //         {
+            //             Console.WriteLine(j.ToString());
+            //         }
+            //         // foreach (GeoPoint p in d.historialGPSData)
+            //         // {
+            //         //     //if (p.ClusterId != -1 && p.ClusterId != 0)
+            //         //         Console.WriteLine(p.ToString() + " - " + p.createdAt.ToShortTimeString() + " - " + p.ClusterId);
+            //         // }
+            //         Console.WriteLine();
+            //     }
+            // }
 
         }
 
