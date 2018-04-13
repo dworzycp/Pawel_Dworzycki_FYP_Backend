@@ -13,14 +13,14 @@ class User
 
     public string userId { get; private set; }
     public Day[] days { get; private set; }
-    public Dictionary<string, Cluster> idToClusterMap;
+    public Dictionary<int, Cluster> idToClusterMap;
     public List<GeoPoint> points;           // All points
     public List<GeoPoint> unassignedPoints; // Points which haven't been assigned a cluster yet
 
     public User(string userId)
     {
         this.userId = userId;
-        this.idToClusterMap = new Dictionary<string, Cluster>();
+        this.idToClusterMap = new Dictionary<int, Cluster>();
         points = new List<GeoPoint>();
         unassignedPoints = new List<GeoPoint>();
 

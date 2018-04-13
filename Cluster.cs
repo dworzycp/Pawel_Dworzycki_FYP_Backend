@@ -16,7 +16,8 @@ class Cluster
     // If the label isn't HOME or WORK get it from GPS data -- Google API?
     public string SemanticLabel = "";
     public string userId;
-    public string clusterId;
+    public int clusterId;
+    public string clusterDBId;
     public List<GeoPoint> points;
 
     public Cluster()

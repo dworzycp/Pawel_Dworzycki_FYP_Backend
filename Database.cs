@@ -59,8 +59,7 @@ class Database
 
     public void SaveCluster(Cluster c)
     {
-        string cmdString = "INSERT INTO Clusters (c_centre_lat, c_centre_long, c_radius, c_label, userId) VALUES ('" + c.centrePoint.latitude + "', '" + c.centrePoint.longitude + "', '" + c.radiusInMeters + "', '" + c.SemanticLabel + "', '" + c.userId + "')";
-        //Console.WriteLine("INSERT INTO Clusters (c_centre_lat, c_centre_long, c_radius, c_label, userId) VALUES ('" + c.centrePoint.latitude + "', '" + c.centrePoint.longitude + "', '" + c.radiusInMeters + "', '" + c.SemanticLabel + "', '" + c.userId + "')");
+        string cmdString = "INSERT INTO Clusters (c_centre_lat, c_centre_long, c_radius, c_label, userId, c_id) VALUES ('" + c.centrePoint.latitude + "', '" + c.centrePoint.longitude + "', '" + c.radiusInMeters + "', '" + c.SemanticLabel + "', '" + c.userId + "', '" + c.clusterId + "')";
 
         SetUpConnection();
 
@@ -107,13 +106,15 @@ class Database
                         double r = Convert.ToDouble(reader["c_radius"].ToString());
                         string name = Convert.ToString(reader["c_label"].ToString());
                         string userId = Convert.ToString(reader["userId"].ToString());
+                        int clusterIndex = Convert.ToInt32(reader["c_id"].ToString());
 
                         Cluster c = new Cluster();
-                        c.clusterId = id;
+                        c.clusterDBId = id;
                         c.centrePoint = new GeoPoint(lat, lon, userId);
                         c.radiusInMeters = r;
                         c.SemanticLabel = name;
                         c.userId = userId;
+                        c.clusterId = clusterIndex;
 
                         clusters.Add(c);
                     }

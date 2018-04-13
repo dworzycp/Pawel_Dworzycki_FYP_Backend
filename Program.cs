@@ -13,6 +13,7 @@ namespace Backend
             Dictionary<string, User> userIdToUserMap = new Dictionary<string, User>();
             List<GeoPoint> dbPoints = new List<GeoPoint>();
             List<Cluster> dbClusters = new List<Cluster>();
+            int highestClusterIndex = 0;
 
             // Get points
             // FAKE
@@ -24,6 +25,15 @@ namespace Backend
             // TODO do I want to get classified points too?
             dbPoints = db.GetUnclassifiedCoordinates();
             dbClusters = db.GetClusters();
+
+            // Set highest cluster index after reading clusters
+            foreach (Cluster c in dbClusters)
+            {
+                if (c.clusterId > highestClusterIndex)
+                {
+                    highestClusterIndex = c.clusterId;
+                }
+            }
 
             // Assign all of the points to users
             // Also assigns existing clusters
@@ -42,7 +52,7 @@ namespace Backend
                         {
                             // Set p's cluster to c
                             p.cluster = c;
-                            //p.ClusterId = c.clusterId;
+                            p.ClusterId = c.clusterId;
                             // Add point to cluser
                             c.points.Add(p);
                             // Remove point from list, so it doesn't go to DBSCAN
@@ -62,8 +72,9 @@ namespace Backend
                         // Create a new Cluster
                         Cluster c = new Cluster();
                         c.userId = u.userId;
-                        // TODO is this correct?
-                        c.clusterId = dbscanCluster[0].ClusterId.ToString();
+                        // Set c's id
+                        c.clusterId = highestClusterIndex + 1;
+                        highestClusterIndex++;
                         // Assign cluster points to cluster
                         c.points = dbscanCluster;
                         // Add cluster to user's list
