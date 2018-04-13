@@ -15,7 +15,6 @@ class GeoPoint
     public DateTime createdAt { get; private set; }
     public string userId { get; private set; }
 
-    //public string dbID = "";
     public int ClusterId = 0;
     public const int UNCLASSIFIED = 0;
     public const int NOISE = -1;
