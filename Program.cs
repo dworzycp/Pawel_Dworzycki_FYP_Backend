@@ -11,11 +11,15 @@ namespace Backend
         {
             // Initialise variables
             Dictionary<string, User> userIdToUserMap = new Dictionary<string, User>();
+            List<GeoPoint> dbPoints = new List<GeoPoint>();
 
             // Get points
+            // FAKE
             //FakeDataGen fdg = new FakeDataGen(21);
+            //dbPoints = fdg.points;
+
+            // REAL
             Database db = new Database();
-            List<GeoPoint> dbPoints = new List<GeoPoint>();
             dbPoints = db.GetUnclassifiedCoordinates();
 
             // Assign all of the points to users
@@ -67,20 +71,20 @@ namespace Backend
                 
                 PredictJourneys pj = new PredictJourneys(a.predictions);
 
-                // foreach (Day d in u.days)
-                // {
-                //     foreach (Journey j in d.journeys)
-                //     {
-                //         Console.WriteLine(j.ToString());
-                //     }
-                // }
+                foreach (Day d in u.days)
+                {
+                    foreach (Journey j in d.journeys)
+                    {
+                        Console.WriteLine(j.ToString());
+                    }
+                }
 
             }
 
             // Print
             if (userIdToUserMap.Count == 0)
             {
-                Console.WriteLine("No data has been processed.");
+                Console.WriteLine("No data has been processed. (0 users)");
             }
 
             foreach (User u in userIdToUserMap.Values)

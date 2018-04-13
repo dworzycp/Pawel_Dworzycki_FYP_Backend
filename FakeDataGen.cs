@@ -22,7 +22,7 @@ class FakeDataGen
     // Radius
     private const int radiusInMeters = 50;
     // Fake userId
-    private const string userId = "1";
+    private const string userId = "11111";
 
     public List<GeoPoint> points { get; private set; }
 
