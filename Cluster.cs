@@ -11,6 +11,8 @@ using System.Linq;
 
 class Cluster
 {
+    private const double maxRadius = 150; 
+
     public GeoPoint centrePoint;
     public double radiusInMeters;
     // If the label isn't HOME or WORK get it from GPS data -- Google API?
@@ -70,7 +72,11 @@ class Cluster
             }
         }
 
-        radiusInMeters = distance;
+        if (distance > maxRadius)
+            radiusInMeters = maxRadius;
+        else
+            radiusInMeters = distance;
+
     }
 
 }
