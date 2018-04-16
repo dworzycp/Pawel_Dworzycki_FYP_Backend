@@ -2,7 +2,7 @@
  * This class works out at what time the user entered and left a cluster
  *
  * @author Pawel Dworzycki
- * @version 23/03/2018
+ * @version 15/04/2018
  */
 using System;
 using System.Collections.Generic;
@@ -83,7 +83,7 @@ class HistoricalJourneys
     private void EnteredCluster(GeoPoint p, User user)
     {
         // Create a historical journey for the day
-        Journey j = new Journey(pointAtWhichClusterIsBeingLeft.createdAt, p.createdAt, pointAtWhichClusterIsBeingLeft.ClusterId, p.ClusterId);
+        Journey j = new Journey(pointAtWhichClusterIsBeingLeft.createdAt, p.createdAt, pointAtWhichClusterIsBeingLeft.ClusterId, p.ClusterId, user.userId);
         user.GetDay(p.createdAt.DayOfWeek).AddHistoricalJourney(j);
         // Reset pointAtWhichClusterIsBeingLeft
         pointAtWhichClusterIsBeingLeft = null;

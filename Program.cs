@@ -114,7 +114,7 @@ namespace Backend
                 AnalyseHistoricalJourneys a = new AnalyseHistoricalJourneys(u.days);
                 // Console.WriteLine(a.ToString());
 
-                PredictJourneys pj = new PredictJourneys(a.predictions);
+                PredictJourneys pj = new PredictJourneys(a.predictions, db);
 
                 foreach (Day d in u.days)
                 {

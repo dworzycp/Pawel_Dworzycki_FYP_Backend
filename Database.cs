@@ -1,7 +1,7 @@
 /**
  * This class connects to a database and retireves data from it
  * @author Pawel Dworzycki
- * @version 13/04/2018
+ * @version 15/04/2018
  */
 
 using System;
@@ -158,6 +158,34 @@ class Database
             {
                 connection.Close();
             }
+        }
+    }
+
+    public void SavePrediction(Journey j)
+    {
+        // To insert the date into the DB it has to be of yyyy/M/dd hh:mm:ss tt format
+        string cmdString = "INSERT INTO Predictions (OriginClusterID, DestClusterID, LeaveTime, EnterTime, UserID, LengthInMins) VALUES ('" + j.startClusterID + "', '" + j.endClusterID + "', '" + j.startTime.ToString("yyyy-M-dd hh:mm:ss") + "', '" + j.endTime.ToString("yyyy-M-dd hh:mm:ss") + "', '" + j.userId + "', '" + j.LengthInMins() + "')";
+
+        //Console.WriteLine("INSERT INTO Predictions (OriginClusterID, DestClusterID, LeaveTime, EnterTime, UserID, LengthInMins) VALUES ('" + j.startClusterID + "', '" + j.endClusterID + "', '" + j.startTime.ToString("yyyy-M-dd hh:mm:ss") + "', '" + j.endTime.ToString("yyyy-M-dd hh:mm:ss") + "', '" + j.userId + "', '" + j.LengthInMins() + "')");
+
+        SetUpConnection();
+
+        try
+        {
+            using (connection)
+            {
+                var command = new SqlCommand(cmdString, connection);
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+        }
+        finally
+        {
+            connection.Close();
         }
     }
 

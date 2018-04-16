@@ -2,7 +2,7 @@
  * This class looks at user's histograms to make prdictions about future movement.
  *
  * @author Pawel Dworzycki
- * @version 23/03/2018
+ * @version 15/04/2018
  */
 using System;
 using System.Collections.Generic;
@@ -12,8 +12,12 @@ using System.Text;
 class PredictJourneys
 {
 
-    public PredictJourneys(Dictionary<Day, HistoricalModel> histograms)
+    Database database;
+
+    public PredictJourneys(Dictionary<Day, HistoricalModel> histograms, Database db)
     {
+        database = db;
+
         foreach (KeyValuePair<Day, HistoricalModel> dayHisto in histograms)
         {
             PredictMovement(dayHisto.Value, dayHisto.Key);
@@ -42,7 +46,8 @@ class PredictJourneys
                 try
                 {
                     DateTime endTime = PredictTime(model.clusterHistograms[desClusterId].enterTime, day);
-                    CreateJourney(startTime, endTime, startClusterId, desClusterId, day);
+                    // TODO there must be a better way of getting userId
+                    CreateJourney(startTime, endTime, startClusterId, desClusterId, day, day.historialJourneys[0].userId);
                 }
                 catch (System.Exception)
                 {
@@ -101,11 +106,13 @@ class PredictJourneys
         return dT;
     }
 
-    private void CreateJourney(DateTime startTime, DateTime endTime, int startClusterId, int endClusterId, Day d)
+    private void CreateJourney(DateTime startTime, DateTime endTime, int startClusterId, int endClusterId, Day d, string userId)
     {
-        Journey j = new Journey(startTime, endTime, startClusterId, endClusterId);
+        Journey j = new Journey(startTime, endTime, startClusterId, endClusterId, userId);
         // Push the journey to the user's day
         d.AddJourney(j);
+        // Save in DB
+        database.SavePrediction(j);
     }
 
 }
