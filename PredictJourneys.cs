@@ -13,10 +13,12 @@ class PredictJourneys
 {
 
     Database database;
+    Dictionary<int, Cluster> idToCluterMap;
 
-    public PredictJourneys(Dictionary<Day, HistoricalModel> histograms, Database db)
+    public PredictJourneys(Dictionary<Day, HistoricalModel> histograms, Database db, Dictionary<int, Cluster> idToCluterMap)
     {
         database = db;
+        this.idToCluterMap = idToCluterMap;
 
         foreach (KeyValuePair<Day, HistoricalModel> dayHisto in histograms)
         {
@@ -112,7 +114,7 @@ class PredictJourneys
         // Push the journey to the user's day
         d.AddJourney(j);
         // Save in DB
-        database.SavePrediction(j);
+        database.SavePrediction(j, idToCluterMap);
     }
 
 }

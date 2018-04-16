@@ -11,6 +11,7 @@ namespace Backend
         {
             // Initialise variables
             Dictionary<string, User> userIdToUserMap = new Dictionary<string, User>();
+            Dictionary<int, Cluster> idToCluterMap = new Dictionary<int, Cluster>();
             List<GeoPoint> dbPoints = new List<GeoPoint>();
             List<Cluster> dbClusters = new List<Cluster>();
             int highestClusterIndex = 0;
@@ -30,9 +31,10 @@ namespace Backend
             foreach (Cluster c in dbClusters)
             {
                 if (c.clusterId > highestClusterIndex)
-                {
                     highestClusterIndex = c.clusterId;
-                }
+
+                // Add all clusters to idToCluterMap
+                idToCluterMap.Add(c.clusterId, c);
             }
 
             // Assign all of the points to users
@@ -87,6 +89,8 @@ namespace Backend
                         db.SaveCluster(c);
                         // TODO in GPS_Coords assign clusterId to point
                         // TODO handle noise
+                        // Add cluster to idToCluterMap
+                        idToCluterMap.Add(c.clusterId, c);
                     }
 
                     // Sort ALL points (dbscan and existing) within clusters by day
@@ -114,7 +118,7 @@ namespace Backend
                 AnalyseHistoricalJourneys a = new AnalyseHistoricalJourneys(u.days);
                 // Console.WriteLine(a.ToString());
 
-                PredictJourneys pj = new PredictJourneys(a.predictions, db);
+                PredictJourneys pj = new PredictJourneys(a.predictions, db, idToCluterMap);
 
                 foreach (Day d in u.days)
                 {

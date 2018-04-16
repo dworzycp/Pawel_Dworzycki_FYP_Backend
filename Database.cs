@@ -161,12 +161,14 @@ class Database
         }
     }
 
-    public void SavePrediction(Journey j)
+    public void SavePrediction(Journey j, Dictionary<int, Cluster> idToCluterMap)
     {
-        // To insert the date into the DB it has to be of yyyy/M/dd hh:mm:ss tt format
-        string cmdString = "INSERT INTO Predictions (OriginClusterID, DestClusterID, LeaveTime, EnterTime, UserID, LengthInMins) VALUES ('" + j.startClusterID + "', '" + j.endClusterID + "', '" + j.startTime.ToString("yyyy-M-dd hh:mm:ss") + "', '" + j.endTime.ToString("yyyy-M-dd hh:mm:ss") + "', '" + j.userId + "', '" + j.LengthInMins() + "')";
 
-        //Console.WriteLine("INSERT INTO Predictions (OriginClusterID, DestClusterID, LeaveTime, EnterTime, UserID, LengthInMins) VALUES ('" + j.startClusterID + "', '" + j.endClusterID + "', '" + j.startTime.ToString("yyyy-M-dd hh:mm:ss") + "', '" + j.endTime.ToString("yyyy-M-dd hh:mm:ss") + "', '" + j.userId + "', '" + j.LengthInMins() + "')");
+        string originClusterName = idToCluterMap[j.startClusterID].SemanticLabel;
+        string endClusterName = idToCluterMap[j.endClusterID].SemanticLabel;
+
+        // To insert the date into the DB it has to be of yyyy/M/dd hh:mm:ss tt format
+        string cmdString = "INSERT INTO Predictions (OriginClusterID, DestClusterID, LeaveTime, EnterTime, UserID, LengthInMins, OriginClusterName, DestClusterName) VALUES ('" + j.startClusterID + "', '" + j.endClusterID + "', '" + j.startTime.ToString("yyyy-M-dd hh:mm:ss") + "', '" + j.endTime.ToString("yyyy-M-dd hh:mm:ss") + "', '" + j.userId + "', '" + j.LengthInMins() + "', '" + originClusterName + "', '" + endClusterName + "')";
 
         SetUpConnection();
 
