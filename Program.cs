@@ -107,11 +107,7 @@ namespace Backend
                     // Find historical journeys
                     HistoricalJourneys hj = new HistoricalJourneys(d.historialGPSData, u);
                 }
-
-                // Calculate cluster's mid point and radius
-                // foreach (Cluster c in u.idToClusterMap.Values)
-                //     c.CalculateRadius();
-
+                
                 // Identify HOME and WORK clusters
                 IdentifyHomeAndWorkClusters idCLusters = new IdentifyHomeAndWorkClusters(u.idToClusterMap, db);
 

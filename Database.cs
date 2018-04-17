@@ -165,10 +165,15 @@ class Database
     {
 
         string originClusterName = idToCluterMap[j.startClusterID].SemanticLabel;
+        string origin_lat = idToCluterMap[j.startClusterID].centrePoint.latitude.ToString();
+        string origin_long = idToCluterMap[j.startClusterID].centrePoint.longitude.ToString();
+
         string endClusterName = idToCluterMap[j.endClusterID].SemanticLabel;
+        string end_lat = idToCluterMap[j.endClusterID].centrePoint.latitude.ToString();
+        string end_long = idToCluterMap[j.endClusterID].centrePoint.longitude.ToString();
 
         // To insert the date into the DB it has to be of yyyy/M/dd hh:mm:ss tt format
-        string cmdString = "INSERT INTO Predictions (OriginClusterID, DestClusterID, LeaveTime, EnterTime, UserID, LengthInMins, OriginClusterName, DestClusterName) VALUES ('" + j.startClusterID + "', '" + j.endClusterID + "', '" + ConvertDateForDB(j.startTime) + "', '" + ConvertDateForDB(j.endTime) + "', '" + j.userId + "', '" + j.LengthInMins() + "', '" + originClusterName + "', '" + endClusterName + "')";
+        string cmdString = "INSERT INTO Predictions (OriginClusterID, DestClusterID, LeaveTime, EnterTime, UserID, LengthInMins, OriginClusterName, DestClusterName, origin_lat, origin_long, dest_lat, dest_long) VALUES ('" + j.startClusterID + "', '" + j.endClusterID + "', '" + ConvertDateForDB(j.startTime) + "', '" + ConvertDateForDB(j.endTime) + "', '" + j.userId + "', '" + j.LengthInMins() + "', '" + originClusterName + "', '" + endClusterName + "', '" + origin_lat + "', '" + origin_long + "', '" + end_lat + "', '" + end_long + "')";
 
         SetUpConnection();
 
@@ -205,6 +210,9 @@ class Database
         rtnVal += " ";
         rtnVal += date.ToShortTimeString();
         rtnVal += ":00";
+        // Need a more robust way of checking if summer time
+        // TODO -- will be fine for now
+        rtnVal += "+01:00";
 
         return rtnVal;
     }
