@@ -168,7 +168,7 @@ class Database
         string endClusterName = idToCluterMap[j.endClusterID].SemanticLabel;
 
         // To insert the date into the DB it has to be of yyyy/M/dd hh:mm:ss tt format
-        string cmdString = "INSERT INTO Predictions (OriginClusterID, DestClusterID, LeaveTime, EnterTime, UserID, LengthInMins, OriginClusterName, DestClusterName) VALUES ('" + j.startClusterID + "', '" + j.endClusterID + "', '" + j.startTime.ToString("yyyy-M-dd hh:mm:ss") + "', '" + j.endTime.ToString("yyyy-M-dd hh:mm:ss") + "', '" + j.userId + "', '" + j.LengthInMins() + "', '" + originClusterName + "', '" + endClusterName + "')";
+        string cmdString = "INSERT INTO Predictions (OriginClusterID, DestClusterID, LeaveTime, EnterTime, UserID, LengthInMins, OriginClusterName, DestClusterName) VALUES ('" + j.startClusterID + "', '" + j.endClusterID + "', '" + ConvertDateForDB(j.startTime) + "', '" + ConvertDateForDB(j.endTime) + "', '" + j.userId + "', '" + j.LengthInMins() + "', '" + originClusterName + "', '" + endClusterName + "')";
 
         SetUpConnection();
 
@@ -194,6 +194,19 @@ class Database
     private void SetUpConnection()
     {
         connection = new SqlConnection("Server=tcp:pawelfypdb.database.windows.net,1433;Initial Catalog=PawelFYPDB;Persist Security Info=True;User Id=pawel;Password=Twirlbites11");
+    }
+
+    private String ConvertDateForDB(DateTime date)
+    {
+        String rtnVal = "";
+
+        // Append the year/month/day
+        rtnVal += date.ToString("yyyy-M-dd");
+        rtnVal += " ";
+        rtnVal += date.ToShortTimeString();
+        rtnVal += ":00";
+
+        return rtnVal;
     }
 
 }
