@@ -20,6 +20,6 @@ The system was developed using an environment with the above versions of require
 3. Move into the cloned directory
 
 ### Running the project
-*Note: By default, the project connects to an Azure hosted DB. To use fake data instead, in 'Program.cs' comment out lines 22 and 23, uncomment lines 18 and 19.*
+*Note: By default, the project connects to an Azure hosted DB. To use fake data instead, in 'Program.cs' pass a 'true' flag when constructing the Database model*
 
 To execute the program run `dotnet run`

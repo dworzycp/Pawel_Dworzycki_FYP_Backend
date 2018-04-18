@@ -17,13 +17,10 @@ namespace Backend
             int highestClusterIndex = 0;
 
             // Get points
-            // FAKE
-            //FakeDataGen fdg = new FakeDataGen(21);
-            //dbPoints = fdg.points;
-
-            // REAL
+            // For FAKE data, pass a 'true' flag when construction the database
             Database db = new Database();
             // TODO do I want to get classified points too?
+            // For FAKE data, pass how many days in GetUnclassifiedCoordinates()
             dbPoints = db.GetUnclassifiedCoordinates();
             dbClusters = db.GetClusters();
 
@@ -107,7 +104,7 @@ namespace Backend
                     // Find historical journeys
                     HistoricalJourneys hj = new HistoricalJourneys(d.historialGPSData, u);
                 }
-                
+
                 // Identify HOME and WORK clusters
                 IdentifyHomeAndWorkClusters idCLusters = new IdentifyHomeAndWorkClusters(u.idToClusterMap, db);
 
